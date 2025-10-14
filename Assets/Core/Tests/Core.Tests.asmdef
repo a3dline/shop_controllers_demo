@@ -1,0 +1,14 @@
+﻿{
+  "name": "Core.Tests",
+  "references": [
+    "UniTask",
+    "VContainer",
+    "Core.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ]
+}
