@@ -49,19 +49,22 @@ namespace Core.Controllers
             _children.Add(child);
 
             using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
+            var cancellationRegistry = cts.Token.Register(() => { child.StopSelf(); });
             TControllerResult result;
 
             try
             {
-                var t1 = UniTask.WaitUntilCanceled(cts.Token).ContinueWith(() => (UniTask<TControllerResult>)default);
-                var t2 = child.RunAsyncFlow(cts.Token);
-                result = await UniTask.WhenAny(t1, t2)
-                                      .ContinueWith(x => x.winArgumentIndex == 0 ? x.result1 : x.result2);
+                result = await child.RunAsyncFlow(cts.Token);
             }
             finally
             {
-                cts.Cancel();
-                child.StopSelf();
+                cancellationRegistry.Dispose();
+                
+                if (!cts.IsCancellationRequested)
+                {
+                    cts.Cancel();
+                    child.StopSelf();    
+                }
             }
 
             return result;
@@ -74,17 +77,21 @@ namespace Core.Controllers
             _children.Add(child);
 
             using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
+            var cancellationRegistry = cts.Token.Register(() => { child.StopSelf(); });
 
             try
             {
-                var t1 = UniTask.WaitUntilCanceled(cts.Token);
-                var t2 = child.RunAsyncFlow(cts.Token);
-                await UniTask.WhenAny(t1, t2);
+                await child.RunAsyncFlow(cts.Token);
             }
             finally
             {
-                cts.Cancel();
-                child.StopSelf();
+                cancellationRegistry.Dispose();
+                
+                if (!cts.IsCancellationRequested)
+                {
+                    cts.Cancel();
+                    child.StopSelf();    
+                }
             }
         }
 
