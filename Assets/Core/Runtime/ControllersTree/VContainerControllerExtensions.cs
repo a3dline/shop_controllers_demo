@@ -7,7 +7,19 @@ namespace Core
 {
     public static class VContainerControllerExtensions
     {
-        public static async UniTask StartAndWaitInScope<TController, TScope>(this ControllerBase controller, CancellationToken token)
+        public static UniTask StartAndWaitInScope<TController, TScope>(
+            this ControllerBase controller,
+            CancellationToken token)
+            where TController : IController<ControllerEmptyResult>
+            where TScope : IInstaller, new()
+        {
+            return controller.StartAndWaitInScope<TController, TScope>(null, token);
+        }
+        
+        public static async UniTask StartAndWaitInScope<TController, TScope>(
+            this ControllerBase controller,
+            object context,
+            CancellationToken token)
             where TController : IController<ControllerEmptyResult>
             where TScope : IInstaller, new()
         {
@@ -18,7 +30,7 @@ namespace Core
             });
 
             var controllerFactory = scope.Resolve<IControllerFactory>();
-            await controller.StartAndWait<TController>(controllerFactory, token);
+            await controller.StartAndWait<TController>(context, controllerFactory, token);
         }
     }
 }

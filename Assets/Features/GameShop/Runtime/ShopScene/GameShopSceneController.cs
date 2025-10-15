@@ -4,20 +4,20 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using VContainer;
 
-namespace Game.Shop
+namespace Features.GameShop
 {
     internal class GameShopSceneController : SceneControllerBase
     {
         public GameShopSceneController(IControllerFactory controllerFactory,
-                                       [Key(SceneProviderType.BuildIn)]ISceneProvider sceneProvider) :
+                                       [Key(ISceneProvider.Type.BuildIn)] ISceneProvider sceneProvider) :
             base(controllerFactory, sceneProvider) { }
 
         protected override string SceneName => "GameShop";
         protected override LoadSceneMode LoadSceneMode => LoadSceneMode.Additive;
 
-        protected override UniTask AsyncFlow(SceneContextBase context, CancellationToken flowToken)
+        protected override UniTask AsyncFlow(SceneContextBase sceneContext, object context, CancellationToken flowToken)
         {
-            var shopContext = context as GameShopSceneContext;
+            var gameShopSceneContext = sceneContext as GameShopSceneContext;
             return UniTask.WaitUntilCanceled(flowToken);
         }
     }

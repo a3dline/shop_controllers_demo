@@ -5,41 +5,31 @@ namespace Core
 {
     public abstract partial class ControllerBase<TResult>
     {
-        public async UniTask<TControllerResult> StartAndWaitResult<TController, TControllerResult>(
+        public UniTask<TControllerResult> StartAndWaitResult<TController, TControllerResult>(
             CancellationToken token)
             where TController : IController<TControllerResult>
         {
-            var child = _controllerFactory.Create<TController>();
-            _children.Add(child);
-
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
-            var cancellationRegistry = cts.Token.Register(() => { child.StopSelf(); });
-            TControllerResult result;
-
-            try
-            {
-                result = await child.RunAsyncFlow(cts.Token);
-            }
-            finally
-            {
-                cancellationRegistry.Dispose();
-
-                if (!cts.IsCancellationRequested)
-                {
-                    cts.Cancel();
-                    child.StopSelf();
-                }
-            }
-
-            return result;
+            return StartAndWaitResult<TController, TControllerResult>(null, _controllerFactory, token);
+        }
+        
+        public UniTask<TControllerResult> StartAndWaitResult<TController, TControllerResult>(
+            object context,
+            CancellationToken token)
+            where TController : IController<TControllerResult>
+        {
+            return StartAndWaitResult<TController, TControllerResult>(context, _controllerFactory, token);
         }
 
-        public UniTask StartAndWait<TController>(CancellationToken token)
+        public UniTask StartAndWait<TController>(CancellationToken token) 
             where TController : IController<ControllerEmptyResult>
         {
-            return StartAndWait<TController>(_controllerFactory, token);
+            return StartAndWait<TController>(null, token);
         }
-
         
+        public UniTask StartAndWait<TController>(object context, CancellationToken token)
+            where TController : IController<ControllerEmptyResult>
+        {
+            return StartAndWait<TController>(context, _controllerFactory, token);
+        }
     }
 }

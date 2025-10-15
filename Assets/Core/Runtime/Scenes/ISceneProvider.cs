@@ -1,15 +1,13 @@
-﻿using Cysharp.Threading.Tasks;
-
-namespace Core
+﻿namespace Core
 {
-    public enum SceneProviderType
-    {
-        FromBundle,
-        BuildIn
-    }
-    
     public interface ISceneProvider
     {
+        public enum Type
+        {
+            FromBundle,
+            BuildIn
+        }
+
         ISceneReference GetSceneReference(string sceneName);
     }
 }

@@ -7,11 +7,14 @@ namespace Game
 {
     public class GameRootController : RootControllerBase
     {
-        public GameRootController(IControllerFactory controllerFactory) : base(controllerFactory) { }
-
-        protected override async UniTask AsyncFlow(CancellationToken flowToken)
+        public GameRootController(IControllerFactory controllerFactory) : base(controllerFactory)
         {
-            await this.StartAndWaitInScope<GameShopController, GameShopScope>(flowToken);
+        }
+
+        protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
+        {
+            var gameContext = (GameContext)context;
+            await this.StartAndWaitInScope<GameShopController, GameShopScope>(gameContext.GameShopContext, flowToken);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Core
         protected abstract string SceneName { get; }
         protected abstract LoadSceneMode LoadSceneMode { get; }
 
-        protected override async UniTask AsyncFlow(CancellationToken flowToken)
+        protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
             await using var reference = _sceneProvider.GetSceneReference(SceneName);
             var scene = await reference.LoadAsync(LoadSceneMode, flowToken);
@@ -28,10 +28,10 @@ namespace Core
                 throw new Exception($"Scene '{SceneName}' is not valid");
             }
 
-            var context = scene.GetRootComponent<SceneContextBase>();
-            await AsyncFlow(context, flowToken);
+            var sceneContext = scene.GetRootComponent<SceneContextBase>();
+            await AsyncFlow(sceneContext, context, flowToken);
         }
 
-        protected abstract UniTask AsyncFlow(SceneContextBase context, CancellationToken flowToken);
+        protected abstract UniTask AsyncFlow(SceneContextBase sceneContext, object context, CancellationToken flowToken);
     }
 }

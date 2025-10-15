@@ -177,6 +177,42 @@ namespace Core.Tests
 
             Assert.That(root.Result, Is.EqualTo(expectedResult));
         }
+        
+        // Context tests
+        [Test]
+        public void StartControllerWithContext_ChildReceivesContext()
+        {
+            var expectedContext = new object();
+            var testController = new TestController();
+            using var scope = _testScope.CreateScope(builder =>
+            {
+                builder.Register<TestRootController<TestController>>(Lifetime.Transient);
+                builder.RegisterInstance(testController);
+            });
+
+            var root = scope.Resolve<TestRootController<TestController>>();
+            root.LaunchTree(expectedContext, _cts.Token);
+
+            Assert.That(testController.ReceivedContext, Is.EqualTo(expectedContext));
+        }
+        
+        [Test]
+        public void StartControllerWithContext_NestedChildReceivesContext()
+        {
+            var expectedContext = new object();
+            var testController = new TestController();
+            using var scope = _testScope.CreateScope(builder =>
+            {
+                builder.Register<TestRootController<TestControllerWithNested<TestController>>>(Lifetime.Transient);
+                builder.Register<TestControllerWithNested<TestController>>(Lifetime.Transient);
+                builder.RegisterInstance(testController);
+            });
+
+            var root = scope.Resolve<TestRootController<TestControllerWithNested<TestController>>>();
+            root.LaunchTree(expectedContext, _cts.Token);
+
+            Assert.That(testController.ReceivedContext, Is.EqualTo(expectedContext));
+        }
     }
 
     public class TestRootController<TControllerForStart> : RootControllerBase
@@ -184,9 +220,9 @@ namespace Core.Tests
     {
         internal TestRootController(IControllerFactory controllerFactory) : base(controllerFactory) { }
 
-        protected override async UniTask AsyncFlow(CancellationToken flowToken)
+        protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
-            await StartAndWait<TControllerForStart>(flowToken);
+            await StartAndWait<TControllerForStart>(context, flowToken);
         }
     }
 
@@ -196,18 +232,18 @@ namespace Core.Tests
         internal TestRootControllerWithResult(IControllerFactory controllerFactory) : base(controllerFactory) { }
         public int Result { get; private set; }
 
-        protected override async UniTask AsyncFlow(CancellationToken flowToken)
+        protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
-            Result = await StartAndWaitResult<TControllerForStart, int>(flowToken);
+            Result = await StartAndWaitResult<TControllerForStart, int>(context, flowToken);
         }
     }
-
+    
     public class TestControllerWithNested<TNestedController> : ControllerBase
         where TNestedController : IController<ControllerEmptyResult>
     {
         public TestControllerWithNested(IControllerFactory controllerFactory) : base(controllerFactory) { }
 
-        protected override async UniTask AsyncFlow(CancellationToken flowToken)
+        protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
             await StartAndWait<TNestedController>(flowToken);
         }
@@ -217,10 +253,13 @@ namespace Core.Tests
     {
         public bool WasStarted { get; private set; }
         public bool WasStopped { get; private set; }
+        
+        public object ReceivedContext { get; private set; }
 
-        public UniTask<ControllerEmptyResult> RunAsyncFlow(CancellationToken flowToken)
+        public UniTask<ControllerEmptyResult> RunAsyncFlow(object context, CancellationToken flowToken)
         {
             WasStarted = true;
+            ReceivedContext = context;
             return UniTask.FromResult(new ControllerEmptyResult());
         }
 
@@ -239,7 +278,7 @@ namespace Core.Tests
             _result = result;
         }
 
-        public UniTask<int> RunAsyncFlow(CancellationToken flowToken)
+        public UniTask<int> RunAsyncFlow(object context, CancellationToken flowToken)
         {
             return UniTask.FromResult(_result);
         }
@@ -251,7 +290,7 @@ namespace Core.Tests
     {
         public bool WasStopped { get; private set; }
 
-        public UniTask<ControllerEmptyResult> RunAsyncFlow(CancellationToken flowToken)
+        public UniTask<ControllerEmptyResult> RunAsyncFlow(object context, CancellationToken flowToken)
         {
             throw new Exception("Test exception");
         }

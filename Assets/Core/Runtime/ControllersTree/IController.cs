@@ -5,7 +5,7 @@ namespace Core
 {
     public interface IController<TResult> : IController
     {
-        UniTask<TResult> RunAsyncFlow(CancellationToken flowToken);
+        UniTask<TResult> RunAsyncFlow(object context, CancellationToken flowToken);
     }
 
     public interface IController

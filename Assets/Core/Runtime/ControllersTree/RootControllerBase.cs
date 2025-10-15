@@ -10,7 +10,12 @@ namespace Core
 
         public void LaunchTree(CancellationToken token, Action<Exception> exceptionHandler = null)
         {
-            AsyncFlow(token).Forget(exceptionHandler);
+            AsyncFlow(null, token).Forget(exceptionHandler);
+        }
+        
+        public void LaunchTree(object context, CancellationToken token, Action<Exception> exceptionHandler = null)
+        {
+            AsyncFlow(context, token).Forget(exceptionHandler);
         }
     }
 }

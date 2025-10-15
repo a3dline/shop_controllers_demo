@@ -1,10 +1,11 @@
-﻿using UnityEngine.SceneManagement;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Core
 {
     public static class SceneExtensions
     {
-        public static T GetRootComponent<T>(this Scene scene) where T : UnityEngine.Component
+        public static T GetRootComponent<T>(this Scene scene) where T : Component
         {
             foreach (var rootGameObject in scene.GetRootGameObjects())
             {

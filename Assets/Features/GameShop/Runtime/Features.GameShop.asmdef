@@ -3,6 +3,8 @@
   "references": [
     "UniTask",
     "VContainer",
+    "Unity.TextMeshPro",
+    "AUnitaskSemaphore.Runtime",
     "Core.Runtime"
   ]
 }

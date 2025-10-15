@@ -1,4 +1,5 @@
-﻿using VContainer;
+﻿using Core.AssetProvider;
+using VContainer;
 
 namespace Core
 {
@@ -10,7 +11,11 @@ namespace Core
 
             // Services
             builder.Register<ISceneProvider, BuildInSceneProvider>(Lifetime.Singleton)
-                   .Keyed(SceneProviderType.BuildIn);
+                   .Keyed(ISceneProvider.Type.BuildIn);
+            builder.Register<IAssetProvider, AddressableAssetProvider>(Lifetime.Singleton)
+                   .Keyed(IAssetProvider.Type.Addressable);
+            builder.Register<IAssetProvider, ResourcesAssetProvider>(Lifetime.Singleton)
+                   .Keyed(IAssetProvider.Type.Resources);
         }
     }
 }

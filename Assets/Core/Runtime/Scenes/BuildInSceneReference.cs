@@ -29,7 +29,7 @@ namespace Core
             {
                 return UniTask.CompletedTask;
             }
-            
+
             return SceneManager.UnloadSceneAsync(_scene).ToUniTask();
         }
     }
