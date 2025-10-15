@@ -6,5 +6,7 @@ namespace Features.GameShop
     {
         [SerializeField]
         private Transform _cardsContainer;
+        
+        public Transform CardsContainer => _cardsContainer;
     }
 }

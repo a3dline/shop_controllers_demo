@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Pool;
@@ -125,6 +126,11 @@ namespace Core
                     child.StopSelf();
                 }
             }
+        }
+        
+        protected void RegisterDisposable(IDisposable disposable)
+        {
+            _disposables.Add(disposable);
         }
 
         protected abstract UniTask<TResult> AsyncFlowWithResult(object context, CancellationToken flowToken);

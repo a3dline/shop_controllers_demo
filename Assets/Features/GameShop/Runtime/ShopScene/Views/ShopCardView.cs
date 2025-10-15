@@ -15,6 +15,9 @@ namespace Features.GameShop
 
         [SerializeField]
         private Button _purchaseBtn;
+        
+        [SerializeField]
+        private TMP_Text _purchaseBtnText;
 
         private void Awake()
         {
@@ -24,6 +27,18 @@ namespace Features.GameShop
 
         public event Action InfoBtnWasClicked;
         public event Action PurchaseBtnWasClicked;
+
+        public bool EnablePurchaseBtn
+        {
+            get => _purchaseBtn.interactable;
+            set => _purchaseBtn.interactable = value;
+        }
+        
+        public string PurchaseBtnText
+        {
+            get => _purchaseBtnText.text;
+            set => _purchaseBtnText.text = value;
+        }
 
         public void SetHeaderText(string text)
         {

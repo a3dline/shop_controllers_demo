@@ -21,3 +21,10 @@ MonoBehaviour:
       - SkuId: Live
         Amount: 1
       Title: Test Data
+    - ConsumableData:
+      - SkuId: Money
+        Amount: 100
+      RewardData:
+      - SkuId: Live
+        Amount: 1
+      Title: Test Data 2

@@ -14,7 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Default Local Group
   m_GUID: ba6af8d2b346b144283c8fa0e4a9c413
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: f6e2a9640d1c13b4cb854c9fa047d3e5
+    m_Address: CardPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c59e7d7e48bc84649a8ca700092a6c92, type: 2}
   m_SchemaSet:

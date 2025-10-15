@@ -4,12 +4,6 @@ using Cysharp.Threading.Tasks;
 
 namespace Features.GameShop
 {
-    public interface IGameShopService
-    {
-        public UniTask<GameShopData> GetShopDataAsync(CancellationToken token);
-        public void UpdateData(GameShopData data);
-    }
-
     internal class GameShopService : IGameShopService
     {
         private GameShopData _data;
@@ -34,6 +28,12 @@ namespace Features.GameShop
             _data = data;
             _isDataInitialized = true;
             _dataGetterTask?.TrySetResult(data);
+        }
+
+        public UniTask PurchaseItemAsync(in BundleData itemId, CancellationToken token)
+        {
+            //TODO implement purchase logic
+            return UniTask.Delay(3000, cancellationToken: token);
         }
     }
 }

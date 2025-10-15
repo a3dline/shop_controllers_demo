@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 4174339708994833449}
   - component: {fileID: 6876872422677084153}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: purchase_btn_label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -291,8 +291,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000061035156, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.43360138, y: 1.5177}
+  m_SizeDelta: {x: -34.6911, y: -12.5755}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4174339708994833449
 CanvasRenderer:
@@ -352,9 +352,9 @@ MonoBehaviour:
   m_fontSize: 20
   m_fontSizeBase: 20
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 10
+  m_fontSizeMax: 20
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -584,6 +584,7 @@ MonoBehaviour:
   _headerText: {fileID: 4860849225043864207}
   _infoBtn: {fileID: 5227700159659316937}
   _purchaseBtn: {fileID: 6796813680862484934}
+  _purchaseBtnText: {fileID: 6876872422677084153}
 --- !u!1 &8155107318334607799
 GameObject:
   m_ObjectHideFlags: 0
