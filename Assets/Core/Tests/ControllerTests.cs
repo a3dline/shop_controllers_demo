@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading;
-using Core.Controllers;
-using Core.ControllersTree;
 using Cysharp.Threading.Tasks;
 using NUnit.Framework;
 using VContainer;
@@ -181,40 +179,37 @@ namespace Core.Tests
         }
     }
 
-    public class TestRootController<TControllerForStart> : RootController
+    public class TestRootController<TControllerForStart> : RootControllerBase
         where TControllerForStart : IController<ControllerEmptyResult>
     {
         internal TestRootController(IControllerFactory controllerFactory) : base(controllerFactory) { }
 
-        protected override async UniTask<ControllerEmptyResult> AsyncFlow(CancellationToken flowToken)
+        protected override async UniTask AsyncFlow(CancellationToken flowToken)
         {
             await StartAndWait<TControllerForStart>(flowToken);
-            return default;
         }
     }
 
-    public class TestRootControllerWithResult<TControllerForStart> : RootController
+    public class TestRootControllerWithResult<TControllerForStart> : RootControllerBase
         where TControllerForStart : IController<int>
     {
         internal TestRootControllerWithResult(IControllerFactory controllerFactory) : base(controllerFactory) { }
         public int Result { get; private set; }
 
-        protected override async UniTask<ControllerEmptyResult> AsyncFlow(CancellationToken flowToken)
+        protected override async UniTask AsyncFlow(CancellationToken flowToken)
         {
             Result = await StartAndWaitResult<TControllerForStart, int>(flowToken);
-            return default;
         }
     }
 
-    public class TestControllerWithNested<TNestedController> : Controller
+    public class TestControllerWithNested<TNestedController> : ControllerBase
         where TNestedController : IController<ControllerEmptyResult>
     {
         public TestControllerWithNested(IControllerFactory controllerFactory) : base(controllerFactory) { }
 
-        protected override async UniTask<ControllerEmptyResult> AsyncFlow(CancellationToken flowToken)
+        protected override async UniTask AsyncFlow(CancellationToken flowToken)
         {
             await StartAndWait<TNestedController>(flowToken);
-            return default;
         }
     }
 

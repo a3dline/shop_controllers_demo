@@ -1,6 +1,6 @@
 ﻿using VContainer;
 
-namespace Core.Controllers
+namespace Core
 {
     internal class VContainerControllerFactory : IControllerFactory
     {

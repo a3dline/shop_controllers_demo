@@ -1,0 +1,9 @@
+﻿{
+  "name": "Game.Runtime",
+  "references": [
+    "UniTask",
+    "VContainer",
+    "Core.Runtime",
+    "Features.GameShop"
+  ]
+}

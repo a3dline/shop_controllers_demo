@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.Pool;
 
-namespace Core.Disposables
+namespace Core
 {
     public sealed class CompositeDisposable : DisposableBase
     {

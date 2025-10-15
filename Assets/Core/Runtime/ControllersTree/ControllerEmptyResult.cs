@@ -1,4 +1,4 @@
-﻿namespace Core.Controllers
+﻿namespace Core
 {
     public struct ControllerEmptyResult { }
 }

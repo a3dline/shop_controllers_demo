@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace Core.Controllers
+namespace Core
 {
     public interface IController<TResult> : IController
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Core.Disposables
+namespace Core
 {
     public abstract class DisposableBase : IDisposable
     {

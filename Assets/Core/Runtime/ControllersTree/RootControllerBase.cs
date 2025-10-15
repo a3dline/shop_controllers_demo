@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading;
-using Core.ControllersTree;
 using Cysharp.Threading.Tasks;
 
-namespace Core.Controllers
+namespace Core
 {
-    public abstract class RootController : Controller
+    public abstract class RootControllerBase : ControllerBase
     {
-        internal RootController(IControllerFactory controllerFactory) : base(controllerFactory) { }
+        public RootControllerBase(IControllerFactory controllerFactory) : base(controllerFactory) { }
 
         public void LaunchTree(CancellationToken token, Action<Exception> exceptionHandler = null)
         {

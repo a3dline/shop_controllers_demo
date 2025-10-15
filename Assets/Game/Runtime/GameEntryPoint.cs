@@ -1,17 +1,17 @@
 ﻿using System.Threading;
-using Core.Disposables;
+using Core;
 using VContainer;
 using VContainer.Unity;
 
-namespace Core
+namespace Game
 {
-    public class AppEntryPoint : DisposableBase, IStartable
+    public class GameEntryPoint : DisposableBase, IStartable
     {
         private readonly IObjectResolver _resolver;
         private CancellationTokenSource _appTokenSource;
 
 
-        public AppEntryPoint(IObjectResolver resolver)
+        public GameEntryPoint(IObjectResolver resolver)
         {
             _resolver = resolver;
         }
@@ -19,7 +19,7 @@ namespace Core
         public void Start()
         {
             _appTokenSource = new CancellationTokenSource();
-            var rootController = _resolver.Resolve<AppRootController>();
+            var rootController = _resolver.Resolve<GameRootController>();
             rootController.LaunchTree(_appTokenSource.Token);
         }
 

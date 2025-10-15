@@ -1,14 +1,11 @@
 ﻿using System.Threading;
-using Core.Controllers;
 using Cysharp.Threading.Tasks;
-using VContainer;
-using VContainer.Unity;
 
-namespace Core.ControllersTree
+namespace Core
 {
-    public abstract partial class Controller<TResult>
+    public abstract partial class ControllerBase<TResult>
     {
-        protected async UniTask<TControllerResult> StartAndWaitResult<TController, TControllerResult>(
+        public async UniTask<TControllerResult> StartAndWaitResult<TController, TControllerResult>(
             CancellationToken token)
             where TController : IController<TControllerResult>
         {
@@ -37,24 +34,12 @@ namespace Core.ControllersTree
             return result;
         }
 
-        protected UniTask StartAndWait<TController>(CancellationToken token)
+        public UniTask StartAndWait<TController>(CancellationToken token)
             where TController : IController<ControllerEmptyResult>
         {
             return StartAndWait<TController>(_controllerFactory, token);
         }
 
-        protected async UniTask StartAndWaitInScope<TController, TScope>(CancellationToken token)
-            where TController : IController<ControllerEmptyResult>
-            where TScope : IInstaller, new()
-        {
-            using var scope = _resolver.CreateScope(builder =>
-            {
-                var installer = new TScope();
-                installer.Install(builder);
-            });
-
-            var controllerFactory = scope.Resolve<IControllerFactory>();
-            await StartAndWait<TController>(controllerFactory, token);
-        }
+        
     }
 }

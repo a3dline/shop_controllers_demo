@@ -1,47 +1,53 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using Core.Controllers;
-using Core.Disposables;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Pool;
 using VContainer;
 
-namespace Core.ControllersTree
+namespace Core
 {
-    public abstract class Controller : Controller<ControllerEmptyResult>
+    public abstract class ControllerBase : ControllerBase<ControllerEmptyResult>
     {
-        internal Controller(IControllerFactory controllerFactory) : base(controllerFactory) { }
+        public ControllerBase(IControllerFactory controllerFactory) : base(controllerFactory) { }
+
+        protected sealed override async UniTask<ControllerEmptyResult> AsyncFlowWithResult(CancellationToken flowToken)
+        {
+            await AsyncFlow(flowToken);
+            return default;
+        }
+
+        protected abstract UniTask AsyncFlow(CancellationToken flowToken);
     }
 
-    public abstract partial class Controller<TResult> : IController<TResult>
+    public abstract partial class ControllerBase<TResult> : IController<TResult>
     {
         private readonly List<IController> _children;
         private readonly IControllerFactory _controllerFactory;
 
         private readonly CompositeDisposable _disposables = new();
 
-        // Inject it we'd like to prevent any unpredictable direct access from user code
+        // Inject it as internal to prevent any unpredictable direct access from user code
         // Tip: Use VContainer roslin source generator for production build to avoid reflection 
         [Inject]
-        private readonly IObjectResolver _resolver;
+        internal readonly IObjectResolver Resolver;
 
         [Inject]
-        internal Controller(IControllerFactory controllerFactory)
+        public ControllerBase(IControllerFactory controllerFactory)
         {
             _controllerFactory = controllerFactory;
             _disposables.Add(ListPool<IController>.Get(out _children));
         }
 
         // Only for testing
-        internal Controller(IControllerFactory controllerFactory, IObjectResolver resolver)
+        internal ControllerBase(IControllerFactory controllerFactory, IObjectResolver resolver)
             : this(controllerFactory)
         {
-            _resolver = resolver;
+            Resolver = resolver;
         }
 
         UniTask<TResult> IController<TResult>.RunAsyncFlow(CancellationToken flowToken)
         {
-            return AsyncFlow(flowToken);
+            return AsyncFlowWithResult(flowToken);
         }
 
 
@@ -57,10 +63,7 @@ namespace Core.ControllersTree
             }
         }
 
-        protected abstract UniTask<TResult> AsyncFlow(CancellationToken flowToken);
-        protected virtual void OnStop() { }
-
-        private async UniTask StartAndWait<TController>(IControllerFactory factory, CancellationToken token)
+        internal async UniTask StartAndWait<TController>(IControllerFactory factory, CancellationToken token)
             where TController : IController<ControllerEmptyResult>
         {
             var child = factory.Create<TController>();
@@ -84,5 +87,8 @@ namespace Core.ControllersTree
                 }
             }
         }
+
+        protected abstract UniTask<TResult> AsyncFlowWithResult(CancellationToken flowToken);
+        protected virtual void OnStop() { }
     }
 }
