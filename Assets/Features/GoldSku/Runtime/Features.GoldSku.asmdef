@@ -1,0 +1,9 @@
+﻿{
+  "name": "Features.GoldSku",
+  "references": [
+    "UniTask",
+    "UniTask.Linq",
+    "VContainer",
+    "Core.Runtime"
+  ]
+}

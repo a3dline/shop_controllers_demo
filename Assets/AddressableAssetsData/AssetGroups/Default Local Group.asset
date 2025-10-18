@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: ba6af8d2b346b144283c8fa0e4a9c413
   m_SerializeEntries:
+  - m_GUID: 46cf7a4e6d5e664409bbcf8d5924c71a
+    m_Address: BalanceBar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f6e2a9640d1c13b4cb854c9fa047d3e5
     m_Address: CardPrefab
     m_ReadOnly: 0

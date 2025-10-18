@@ -1,5 +1,4 @@
 ﻿using System.Threading;
-using AUniTaskSemaphore;
 using Core;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -22,19 +21,19 @@ namespace Features.GameShop
             var prefab = cardContext.Prefab;
             var parent = cardContext.Parent;
             var bundle = cardContext.Bundle;
-            
+
             var instance = Object.Instantiate(prefab, parent);
             RegisterDisposable(instance.ToDisposable());
-            
+
             var view = instance.GetComponent<ShopCardView>();
 
-            view.PurchaseBtnWasClicked += () => PurchaseFlow(view, bundle, flowToken).Forget();        
-            
+            view.PurchaseBtnWasClicked += () => PurchaseFlow(view, bundle, flowToken).Forget();
+
             view.SetHeaderText(bundle.Title);
-            return UniTask.WaitUntilCanceled(flowToken); 
+            return UniTask.WaitUntilCanceled(flowToken);
         }
 
-        private async UniTask PurchaseFlow(ShopCardView view,BundleData bundle, CancellationToken flowToken)
+        private async UniTask PurchaseFlow(ShopCardView view, BundleData bundle, CancellationToken flowToken)
         {
             var origin = view.PurchaseBtnText;
             view.PurchaseBtnText = "Processing...";

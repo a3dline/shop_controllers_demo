@@ -1,4 +1,5 @@
 ﻿using System;
+using Features.BalanceBar;
 using Features.GameShop;
 
 namespace Game
@@ -7,5 +8,6 @@ namespace Game
     public class GameContext
     {
         public GameShopContext GameShopContext;
+        public BalanceBarContext BalanceBarContext;
     }
 }

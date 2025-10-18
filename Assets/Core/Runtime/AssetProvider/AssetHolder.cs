@@ -1,7 +1,7 @@
 ﻿using System;
 using Object = UnityEngine.Object;
 
-namespace Core.AssetProvider
+namespace Core
 {
     public readonly struct AssetHolder<T> : IDisposable
         where T : Object

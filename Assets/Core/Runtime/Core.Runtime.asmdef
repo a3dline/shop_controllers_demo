@@ -2,6 +2,7 @@
   "name": "Core.Runtime",
   "references": [
     "UniTask",
+    "UniTask.Linq",
     "VContainer",
     "Unity.Addressables",
     "Unity.ResourceManager"

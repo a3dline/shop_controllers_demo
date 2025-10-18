@@ -1,0 +1,10 @@
+﻿{
+  "name": "Features.BalanceBar.Runtime",
+  "references": [
+    "UniTask",
+    "VContainer",
+    "Unity.TextMeshPro",
+    "Core.Runtime",
+    "GameEvents.Runtime"
+  ]
+}

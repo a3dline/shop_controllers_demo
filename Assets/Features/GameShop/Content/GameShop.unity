@@ -605,6 +605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shopView: {fileID: 2104213578}
+  _balanceBarParent: {fileID: 1886720126}
 --- !u!4 &2104213577
 Transform:
   m_ObjectHideFlags: 0

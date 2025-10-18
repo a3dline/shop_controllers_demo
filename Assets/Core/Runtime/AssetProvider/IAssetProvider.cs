@@ -2,7 +2,7 @@
 using Cysharp.Threading.Tasks;
 using Object = UnityEngine.Object;
 
-namespace Core.AssetProvider
+namespace Core
 {
     public interface IAssetProvider
     {

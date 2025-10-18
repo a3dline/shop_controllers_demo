@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
-namespace Core.AssetProvider
+namespace Core
 {
     internal class AddressableAssetProvider : IAssetProvider
     {

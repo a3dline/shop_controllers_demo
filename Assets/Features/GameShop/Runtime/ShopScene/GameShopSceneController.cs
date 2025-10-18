@@ -1,7 +1,8 @@
 ﻿using System.Threading;
 using Core;
-using Core.AssetProvider;
+using Core.EventsBus;
 using Cysharp.Threading.Tasks;
+using GameEvents.Runtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using VContainer;
@@ -12,15 +13,18 @@ namespace Features.GameShop
     {
         private readonly IAssetProvider _assetProvider;
         private readonly IGameShopService _shopService;
+        private readonly IEventBus _eventBus;
 
         public GameShopSceneController(IControllerFactory controllerFactory,
                                        [Key(ISceneProvider.Type.BuildIn)] ISceneProvider sceneProvider,
                                        [Key(IAssetProvider.Type.Addressable)] IAssetProvider assetProvider,
-                                       IGameShopService shopService)
+                                       IGameShopService shopService,
+                                       IEventBus eventBus)
             : base(controllerFactory, sceneProvider)
         {
             _assetProvider = assetProvider;
             _shopService = shopService;
+            _eventBus = eventBus;
         }
 
         protected override string SceneName => "GameShop";
@@ -33,6 +37,11 @@ namespace Features.GameShop
             var gameShopSceneContext = (GameShopSceneContext)sceneContext;
             var gameShopContext = (GameShopContext)context;
             var shopView = gameShopSceneContext.ShopView;
+            
+            var displayBalanceBarEvent = new DisplayBalanceBarEvent();
+            displayBalanceBarEvent.DisplayToken = flowToken;
+            displayBalanceBarEvent.Parent = gameShopSceneContext.BalanceBarParent;
+            _eventBus.RaiseEvent(displayBalanceBarEvent);
 
             var getShopDataTask = _shopService.GetShopDataAsync(flowToken);
             var getCardPrefabTask = _assetProvider.LoadAsync<GameObject>(gameShopContext.CardPrefabAddress, flowToken);

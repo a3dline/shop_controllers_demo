@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Context:
     GameShopContext:
-      _useBuildInDataFromResources: 1
       _buildInDataResourcesAddress: DefaultGameShopData
+      _cardPrefabAddress: CardPrefab
+    BalanceBarContext:
+      _balanceBarPrefabAddress: BalanceBar

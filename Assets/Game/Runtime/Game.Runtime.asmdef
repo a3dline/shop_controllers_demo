@@ -4,6 +4,8 @@
     "UniTask",
     "VContainer",
     "Core.Runtime",
-    "Features.GameShop"
+    "Features.GameShop",
+    "Features.GoldSku",
+    "Features.BalanceBar.Runtime"
   ]
 }

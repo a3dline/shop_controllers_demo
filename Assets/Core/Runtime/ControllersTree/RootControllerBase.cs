@@ -8,14 +8,34 @@ namespace Core
     {
         public RootControllerBase(IControllerFactory controllerFactory) : base(controllerFactory) { }
 
-        public void LaunchTree(CancellationToken token, Action<Exception> exceptionHandler = null)
+        public void LaunchTree(CancellationToken flowToken, Action<Exception> exceptionHandler = null)
         {
-            AsyncFlow(null, token).Forget(exceptionHandler);
+            LaunchFlow(null, flowToken).Forget(exceptionHandler);
         }
         
         public void LaunchTree(object context, CancellationToken token, Action<Exception> exceptionHandler = null)
         {
-            AsyncFlow(context, token).Forget(exceptionHandler);
+            LaunchFlow(context, token).Forget(exceptionHandler);
+        }
+        
+        private async UniTask LaunchFlow(object context, CancellationToken token)
+        {
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
+            var cancellationRegistry = cts.Token.Register(OnStop);
+            try
+            {
+                await AsyncFlow(context, cts.Token);
+            }
+            finally
+            {
+                cancellationRegistry.Dispose();
+
+                if (!cts.IsCancellationRequested)
+                {
+                    cts.Cancel();
+                    OnStop();
+                }
+            }
         }
     }
 }

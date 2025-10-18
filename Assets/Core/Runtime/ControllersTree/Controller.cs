@@ -128,6 +128,7 @@ namespace Core
             }
         }
         
+        // TODO Remove
         protected void RegisterDisposable(IDisposable disposable)
         {
             _disposables.Add(disposable);

@@ -1,40 +1,34 @@
 ﻿using System.Threading;
 using Core;
-using VContainer;
+using Cysharp.Threading.Tasks;
+using Features.BalanceBar;
+using Features.GameShop;
 using VContainer.Unity;
 
 namespace Game
 {
-    public class GameEntryPoint : DisposableBase, IStartable
+    public class GameEntryPoint : RootControllerBase, IAsyncStartable
     {
-        private readonly IObjectResolver _resolver;
-        private readonly IControllerFactory _controllerFactory;
         private readonly GameContext _gameContext;
-        private CancellationTokenSource _appTokenSource;
 
-
-        public GameEntryPoint(IObjectResolver resolver,
+        public GameEntryPoint(IControllerFactory controllerFactory,
                               GameContext gameContext)
+            : base(controllerFactory)
         {
-            _resolver = resolver;
             _gameContext = gameContext;
         }
 
-        public void Start()
+
+        public UniTask StartAsync(CancellationToken cancellation = default)
         {
-            _appTokenSource = new CancellationTokenSource();
-            
-            var rootController = _resolver.Resolve<GameRootController>();
-            rootController.LaunchTree(_gameContext, _appTokenSource.Token);
+            LaunchTree(cancellation);
+            return UniTask.WaitUntilCanceled(cancellation);
         }
 
-        protected override void Dispose(bool disposing)
+        protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
-            if (disposing)
-            {
-                _appTokenSource.Cancel();
-                _appTokenSource.Dispose();
-            }
+            this.StartAndWaitInScope<BalanceBarController, BalanceBarScope>(_gameContext.BalanceBarContext, flowToken).Forget();
+            await this.StartAndWaitInScope<GameShopController, GameShopScope>(_gameContext.GameShopContext, flowToken);
         }
     }
 }
