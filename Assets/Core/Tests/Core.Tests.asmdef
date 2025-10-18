@@ -2,6 +2,7 @@
   "name": "Core.Tests",
   "references": [
     "UniTask",
+    "UniTask.Linq",
     "VContainer",
     "Core.Runtime"
   ],
