@@ -1,5 +1,5 @@
 ﻿{
-  "name": "Features.PolSku.Runtime",
+  "name": "Features.Health.Runtime",
   "references": [
     "UniTask",
     "UniTask.Linq",

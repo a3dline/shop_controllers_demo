@@ -5,18 +5,18 @@ using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using UnityEngine;
 
-namespace Features.PolSku
+namespace Features.HealthSku
 {
-    internal class PolSkuHandlerController : ControllerBase
+    internal class HealthSkuHandlerController : ControllerBase
     {
-        private const string SkuId = "pol";
-        
-        private readonly ISkuHandlerInternal _skuHandler;
+        private const string SkuId = "health";
         private readonly IPlayerDataRepositoryWrapper _playerDataRepository;
 
-        public PolSkuHandlerController(IControllerFactory controllerFactory,
-                                       ISkuHandlerInternal skuHandler,
-                                       IPlayerDataRepositoryWrapper playerDataRepository) : base(controllerFactory)
+        private readonly ISkuHandlerInternal _skuHandler;
+
+        public HealthSkuHandlerController(IControllerFactory controllerFactory,
+                                          ISkuHandlerInternal skuHandler,
+                                          IPlayerDataRepositoryWrapper playerDataRepository) : base(controllerFactory)
         {
             _skuHandler = skuHandler;
             _playerDataRepository = playerDataRepository;
@@ -26,9 +26,9 @@ namespace Features.PolSku
         {
             var resultString = await _playerDataRepository.GetSkuData(SkuId);
             int.TryParse(resultString, out var result);
-            
+
             _skuHandler.UpdateBalance(result);
-            
+
             await foreach (var _ in UniTaskAsyncEnumerable.EveryUpdate().WithCancellation(flowToken))
             {
                 if (!_skuHandler.IsDirty)
@@ -38,7 +38,7 @@ namespace Features.PolSku
 
                 var newBalance = _skuHandler.TakeNewBalanceAndClear();
 
-                Debug.Log("Updated point of lives balance: " + newBalance);
+                Debug.Log("Updated health balance: " + newBalance);
 
                 await _playerDataRepository.UpdateSku(SkuId, result.ToString(CultureInfo.InvariantCulture));
                 _skuHandler.UpdateBalance(newBalance);

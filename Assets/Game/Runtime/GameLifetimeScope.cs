@@ -1,6 +1,6 @@
 ﻿using Core;
 using Features.GoldSku;
-using Features.PolSku;
+using Features.HealthSku;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -20,7 +20,7 @@ namespace Game
             // I cannot use the [InitializeOnLoad] attribute because this demo-project setup to be run without a domain reload.
             // The workaround is to create a custom build step that will generate all installer types into a resource file.
             new GoldSkuInstaller(),
-            new PolSkuInstaller()
+            new HealthSkuInstaller()
         };
 
         protected override void Configure(IContainerBuilder builder)

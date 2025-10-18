@@ -12,7 +12,7 @@ namespace Core
             return amount.ToInt32(CultureInfo) >= CurrentBalance.ToInt32(CultureInfo);
         }
 
-        protected override IConvertible CalculateBalance()
+        protected override IConvertible CalculateBalanceFromTransactions()
         {
             var current = Convert.ToInt32(CurrentBalance, CultureInfo);
             foreach (var transaction in TransactionsQueue)

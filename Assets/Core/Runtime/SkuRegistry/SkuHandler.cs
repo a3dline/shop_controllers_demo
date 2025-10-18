@@ -15,7 +15,7 @@ namespace Core
 
         public IConvertible TakeNewBalanceAndClear()
         {
-            var balance = CalculateBalance();
+            var balance = CalculateBalanceFromTransactions();
             TransactionsQueue.Clear();
             return balance;
         }
@@ -40,6 +40,6 @@ namespace Core
 
         string ISkuHandler.Id { get; set; }
 
-        protected abstract IConvertible CalculateBalance();
+        protected abstract IConvertible CalculateBalanceFromTransactions();
     }
 }

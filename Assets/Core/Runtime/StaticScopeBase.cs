@@ -1,7 +1,7 @@
 ﻿using VContainer;
 using VContainer.Unity;
 
-namespace Features.GoldSku
+namespace Core
 {
     public abstract class StaticScopeBase : IInstaller
     {

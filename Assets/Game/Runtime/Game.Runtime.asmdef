@@ -7,6 +7,6 @@
     "Features.GameShop",
     "Features.BalanceBar.Runtime",
     "Features.GoldSku.Runtime",
-    "Features.PolSku.Runtime"
+    "Features.Health.Runtime"
   ]
 }

@@ -3,16 +3,16 @@ using Core;
 using Cysharp.Threading.Tasks;
 using VContainer.Unity;
 
-namespace Features.PolSku
+namespace Features.HealthSku
 {
-    public class PolSkuEntryPoint : RootControllerBase, IAsyncStartable
+    public class HealthSkuEntryPoint : RootControllerBase, IAsyncStartable
     {
         private readonly ISkuHandler _skuHandler;
         private readonly ISkuRegistrationService _skuRegistrationService;
 
-        public PolSkuEntryPoint(IControllerFactory controllerFactory,
-                             ISkuRegistrationService skuRegistrationService,
-                             ISkuHandler skuHandler)
+        public HealthSkuEntryPoint(IControllerFactory controllerFactory,
+                                   ISkuRegistrationService skuRegistrationService,
+                                   ISkuHandler skuHandler)
             : base(controllerFactory)
         {
             _skuRegistrationService = skuRegistrationService;
@@ -29,13 +29,13 @@ namespace Features.PolSku
         {
             var registry = new SkuRegistry
                            {
-                               SkuId = "pol_sku",
-                               DisplayName = "Point of Lives",
+                               SkuId = "health_sku",
+                               DisplayName = "Health", // TO to context
                                Handler = _skuHandler
                            };
             _skuRegistrationService.Register(registry);
 
-            return StartAndWait<PolSkuHandlerController>(flowToken);
+            return StartAndWait<HealthSkuHandlerController>(flowToken);
         }
     }
 }
