@@ -8,14 +8,9 @@ namespace Features.GoldSku
     {
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.Register<ISkuHandlerInternal, ISkuHandler, GoldSkuHandler>(Lifetime.Singleton);
+            builder.Register<ISkuHandlerInternal, ISkuHandler, ConsumableSkuHandler>(Lifetime.Singleton);
             builder.RegisterEntryPoint<GoldSkuEntryPoint>();
             builder.Register<GoldSkuHandlerController>(Lifetime.Transient);
         }
-    }
-
-    public class GoldSkuHandler : ConsumableSkuHandler //TODO store name in registry separately
-    {
-        public override string Name => "Gold";
     }
 }

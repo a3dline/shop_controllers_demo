@@ -6,5 +6,6 @@ namespace Core
     {
         void Register(in SkuRegistry registry);
         IEnumerable<ISkuHandler> SkuHandlers { get; }
+        string GetSkuDisplayName(string skuHandlerId);
     }
 }

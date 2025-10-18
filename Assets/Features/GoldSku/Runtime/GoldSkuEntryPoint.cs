@@ -30,6 +30,7 @@ namespace Features.GoldSku
             var registry = new SkuRegistry
                            {
                                SkuId = "gold_sku",
+                               DisplayName = "Gold",
                                Handler = _skuHandler
                            };
             _skuRegistrationService.Register(registry);

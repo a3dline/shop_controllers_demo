@@ -3,10 +3,8 @@ using System.Globalization;
 
 namespace Core
 {
-    public abstract class ConsumableSkuHandler : SkuHandler
+    public class ConsumableSkuHandler : SkuHandler
     {
-        public abstract override string Name { get; }
-
         protected override CultureInfo CultureInfo => CultureInfo.InvariantCulture;
 
         public override bool IsValidTransaction(IConvertible amount)

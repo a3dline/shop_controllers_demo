@@ -11,6 +11,7 @@ namespace Core
         protected readonly List<IConvertible> TransactionsQueue = new();
 
         protected IConvertible CurrentBalance;
+        protected abstract CultureInfo CultureInfo { get; }
 
         public IConvertible TakeNewBalanceAndClear()
         {
@@ -36,8 +37,9 @@ namespace Core
         public abstract bool IsValidTransaction(IConvertible amount);
 
         public IReadOnlyAsyncReactiveProperty<string> BalanceStringProperty => _balanceStringProperty;
-        public abstract string Name { get; }
+
+        string ISkuHandler.Id { get; set; }
+
         protected abstract IConvertible CalculateBalance();
-        protected abstract CultureInfo CultureInfo { get; }
     }
 }

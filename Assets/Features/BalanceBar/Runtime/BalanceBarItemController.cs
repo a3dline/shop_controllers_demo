@@ -7,7 +7,13 @@ namespace Features.BalanceBar
 {
     public class BalanceBarItemController : ControllerBase
     {
-        public BalanceBarItemController(IControllerFactory controllerFactory) : base(controllerFactory) { }
+        private readonly ISkuRegistrationService _skuRegistrationService;
+
+        public BalanceBarItemController(IControllerFactory controllerFactory,
+                                        ISkuRegistrationService skuRegistrationService) : base(controllerFactory)
+        {
+            _skuRegistrationService = skuRegistrationService;
+        }
 
         protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
@@ -20,7 +26,8 @@ namespace Features.BalanceBar
             using var _ = instance.ToDisposable();
 
             var view = instance.GetComponent<BalanceBarItemView>();
-            view.SetLabel(skuHandler.Name);
+            var displayName = _skuRegistrationService.GetSkuDisplayName(skuHandler.Id);
+            view.SetLabel(displayName);
             
             await foreach (var value in skuHandler.BalanceStringProperty.WithCancellation(flowToken))
             {

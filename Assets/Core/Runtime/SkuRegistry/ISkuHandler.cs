@@ -8,6 +8,6 @@ namespace Core
         void AddTransaction(IConvertible amount);
         bool IsValidTransaction(IConvertible amount);
         IReadOnlyAsyncReactiveProperty<string> BalanceStringProperty { get; }
-        string Name { get; }
+        string Id { get; internal set; }
     }
 }
