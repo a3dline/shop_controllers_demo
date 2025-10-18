@@ -27,9 +27,6 @@ namespace Features.GameShop
             _eventBus = eventBus;
         }
 
-        protected override string SceneName => "GameShop";
-        protected override LoadSceneMode LoadSceneMode => LoadSceneMode.Additive;
-
         protected override async UniTask AsyncFlow(SceneContextBase sceneContext,
                                                    object context,
                                                    CancellationToken flowToken)
@@ -61,6 +58,12 @@ namespace Features.GameShop
             }
 
             await UniTask.WaitUntilCanceled(flowToken);
+        }
+
+        protected override (string, LoadSceneMode) GetSceneNameAndMode(object context)
+        {
+            var gameShopContext = (GameShopContext)context;
+            return (gameShopContext.GameShopSceneName, LoadSceneMode.Additive);
         }
     }
 }

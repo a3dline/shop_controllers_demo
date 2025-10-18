@@ -16,22 +16,25 @@ namespace Core
             _sceneProvider = sceneProvider;
         }
 
-        protected abstract string SceneName { get; }
-        protected abstract LoadSceneMode LoadSceneMode { get; }
-
-        protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
+        protected sealed override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
-            await using var reference = _sceneProvider.GetSceneReference(SceneName);
-            var scene = await reference.LoadAsync(LoadSceneMode, flowToken);
+            var (sceneName, loadSceneMode) = GetSceneNameAndMode(context);
+            
+            await using var reference = _sceneProvider.GetSceneReference(sceneName);
+            var scene = await reference.LoadAsync(loadSceneMode, flowToken);
             if (!scene.IsValid())
             {
-                throw new Exception($"Scene '{SceneName}' is not valid");
+                throw new Exception($"Scene '{sceneName}' is not valid");
             }
 
             var sceneContext = scene.GetRootComponent<SceneContextBase>();
             await AsyncFlow(sceneContext, context, flowToken);
         }
 
-        protected abstract UniTask AsyncFlow(SceneContextBase sceneContext, object context, CancellationToken flowToken);
+        protected abstract UniTask AsyncFlow(SceneContextBase sceneContext,
+                                             object context,
+                                             CancellationToken flowToken);
+        
+        protected abstract (string, LoadSceneMode) GetSceneNameAndMode(object context);
     }
 }
