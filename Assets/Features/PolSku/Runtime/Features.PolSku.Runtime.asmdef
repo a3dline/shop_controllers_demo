@@ -1,5 +1,5 @@
 ﻿{
-  "name": "Features.GoldSku",
+  "name": "Features.PolSku.Runtime",
   "references": [
     "UniTask",
     "UniTask.Linq",
