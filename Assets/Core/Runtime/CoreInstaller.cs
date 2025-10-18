@@ -1,4 +1,5 @@
-﻿using Core.EventsBus;
+﻿using Core.BackedClient;
+using Core.EventsBus;
 using VContainer;
 using VContainer.Unity;
 
@@ -24,6 +25,7 @@ namespace Core
             builder.Register<IRepository, InMemoryRepository>(Lifetime.Singleton);
             builder.Register<IPlayerDataRepositoryWrapper, PlayerDataRepositoryWrapper>(Lifetime.Singleton);
             builder.Register<IEventBus, EventBus>(Lifetime.Singleton);
+            builder.Register<IBackendClient, FakeBackendClient>(Lifetime.Singleton);
         }
     }
 }

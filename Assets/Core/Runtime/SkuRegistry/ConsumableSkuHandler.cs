@@ -9,9 +9,7 @@ namespace Core
 
         public override bool IsValidTransaction(IConvertible amount)
         {
-            var balance = CalculateBalance();
-            var newBalance = balance.ToInt32(CultureInfo) + amount.ToInt32(CultureInfo);
-            return newBalance >= 0;
+            return amount.ToInt32(CultureInfo) >= CurrentBalance.ToInt32(CultureInfo);
         }
 
         protected override IConvertible CalculateBalance()

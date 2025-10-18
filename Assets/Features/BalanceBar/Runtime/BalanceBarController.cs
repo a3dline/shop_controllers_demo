@@ -23,12 +23,13 @@ namespace Features.BalanceBar
 
             await foreach (var evn in _eventBus.Subscribe<DisplayBalanceBarEvent>().WithCancellation(flowToken))
             {
-                var ctx = new BalanceBarViewContext
-                          {
-                              Parent = evn.Parent,
-                              BalanceBarPrefabAddress = balanceBarContext.BalanceBarPrefabAddress
-                          };
-                await StartAndWait<BalanceBarViewController>(ctx, flowToken);
+                using var cts = CancellationTokenSource.CreateLinkedTokenSource(evn.DisplayToken, flowToken);
+                var viewContext = new BalanceBarViewContext
+                                  {
+                                      Parent = evn.Parent,
+                                      BalanceBarPrefabAddress = balanceBarContext.BalanceBarPrefabAddress
+                                  };
+                await StartAndWait<BalanceBarViewController>(viewContext, cts.Token);
             }
         }
     }

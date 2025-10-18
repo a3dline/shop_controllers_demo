@@ -6,15 +6,16 @@ namespace Features.GameShop
     public struct SkuData
     {
         public string SkuId;
-        public int Amount;
+        public string Amount;
     }
 
     [Serializable]
     public struct BundleData
     {
-        public SkuData[] ConsumableData;
+        public SkuData[] PurchaseData;
         public SkuData[] RewardData;
         public string Title;
+        public string Id;
     }
 
     [Serializable]

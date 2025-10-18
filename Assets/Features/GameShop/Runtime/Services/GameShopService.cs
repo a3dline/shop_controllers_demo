@@ -1,28 +1,43 @@
-﻿using System.Threading;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using AUniTaskSemaphore;
+using Core;
+using Core.BackedClient;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace Features.GameShop
 {
     internal class GameShopService : IGameShopService
     {
-        private GameShopData _data;
-        private bool _isDataInitialized;
-        private UniTaskCompletionSource<GameShopData> _dataGetterTask;
+        private readonly IBackendClient _backendClient;
         private readonly UniTaskSemaphore _getterSemaphore = new(1);
+        private readonly ISkuRegistrationService _skuRegistrationService;
+        private GameShopData _data;
+        private UniTaskCompletionSource<GameShopData> _dataGetterTask;
+        private bool _isDataInitialized;
+
+        public GameShopService(IBackendClient backendClient,
+                               ISkuRegistrationService skuRegistrationService)
+        {
+            _backendClient = backendClient;
+            _skuRegistrationService = skuRegistrationService;
+        }
 
         public async UniTask<GameShopData> GetShopDataAsync(CancellationToken token)
         {
             using var _ = await _getterSemaphore.Acquire(token);
-            
+
             if (!_isDataInitialized)
             {
                 _dataGetterTask = new UniTaskCompletionSource<GameShopData>();
                 await _dataGetterTask.Task.AttachExternalCancellation(token);
             }
-            
+
             return _data;
         }
+
         public void UpdateData(GameShopData data)
         {
             _data = data;
@@ -30,10 +45,51 @@ namespace Features.GameShop
             _dataGetterTask?.TrySetResult(data);
         }
 
-        public UniTask PurchaseItemAsync(in BundleData itemId, CancellationToken token)
+        public async UniTask<bool> PurchaseItemAsync(BundleData bundle, CancellationToken token)
         {
-            //TODO implement purchase logic
-            return UniTask.Delay(3000, cancellationToken: token);
+            var requestDto = new BundleRequestDto
+                             {
+                                 BundleId = bundle.Id
+                             };
+
+            var response =
+                await _backendClient.PostAsync<BundleRequestDto, BundleResponseDto>("game-shop/purchase-bundle",
+                     requestDto,
+                     token);
+
+            if (response.Status == ResponseStatus.Failure)
+            {
+                Debug.LogError($"Purchase bundle {response.BundleId} failed: {response.Error}");
+                return false;
+            }
+
+            foreach (var sku in bundle.PurchaseData.Concat(bundle.RewardData))
+            {
+                var handler = _skuRegistrationService.GetSkuHandler(sku.SkuId);
+                if (handler is null)
+                {
+                    throw new Exception($"Failed to find sku handler for sku: {sku.SkuId}");
+                }
+
+                handler.AddTransaction(sku.Amount);
+            }
+
+            return true;
         }
     }
+
+    [Serializable]
+    public record BundleRequestDto
+    {
+        public string BundleId;
+    }
+
+    public record BundleResponseDto
+    {
+        public string BundleId;
+        public string Error;
+        public ResponseStatus Status;
+    }
+
+    
 }

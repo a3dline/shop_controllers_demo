@@ -7,6 +7,6 @@ namespace Features.GameShop
     {
         public UniTask<GameShopData> GetShopDataAsync(CancellationToken token);
         public void UpdateData(GameShopData data);
-        public UniTask PurchaseItemAsync(in BundleData itemId, CancellationToken token);
+        public UniTask<bool> PurchaseItemAsync(BundleData bundle, CancellationToken token);
     }
 }

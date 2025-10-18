@@ -22,6 +22,11 @@ namespace Core
 
         public IEnumerable<ISkuHandler> SkuHandlers => _skuHandlers.Values;
 
+        public ISkuHandler GetSkuHandler(string skuHandlerId)
+        {
+            return _skuHandlers.GetValueOrDefault(skuHandlerId);
+        }
+
         public string GetSkuDisplayName(string skuHandlerId)
         {
             return _skuDisplayNames.TryGetValue(skuHandlerId, out var displayName) ? displayName : string.Empty;

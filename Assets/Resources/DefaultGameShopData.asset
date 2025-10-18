@@ -14,17 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Data:
     Bundles:
-    - ConsumableData:
-      - SkuId: Money
-        Amount: 100
+    - PurchaseData: []
       RewardData:
-      - SkuId: Live
+      - SkuId: gold_sku
         Amount: 1
       Title: Test Data
-    - ConsumableData:
-      - SkuId: Money
-        Amount: 100
-      RewardData:
-      - SkuId: Live
-        Amount: 1
-      Title: Test Data 2
+      Id: w4c5t3y45vc45
