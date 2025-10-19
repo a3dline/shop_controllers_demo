@@ -1,4 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using System.Globalization;
+using Cysharp.Threading.Tasks;
 
 namespace Core
 {
@@ -13,14 +15,15 @@ namespace Core
             _repository = repository;
         }
 
-        public UniTask UpdateSku(string skuId, string data)
+        public UniTask UpdateSku(string skuId, IConvertible data)
         {
-            return _repository.UpsetAsync(SKUPrefix + skuId, data);
+            return _repository.UpsetAsync(SKUPrefix + skuId, data.ToString(CultureInfo.InvariantCulture));
         }
 
-        public UniTask<string> GetSkuData(string skuId)
+        public async UniTask<IConvertible> GetSkuData(string skuId)
         {
-            return _repository.GetAsync(SKUPrefix + skuId);
+            var value = await _repository.GetAsync(SKUPrefix + skuId);
+            return value;
         }
     }
 }

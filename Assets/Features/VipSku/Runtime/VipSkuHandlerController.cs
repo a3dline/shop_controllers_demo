@@ -26,10 +26,11 @@ namespace Features.VipSku
         {
             var skuId = (string)context;
             var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            var cachedValueString = await _playerDataRepository.GetSkuData(skuId);
-            if (long.TryParse(cachedValueString, out var cachedValue))
+            var cachedValue = await _playerDataRepository.GetSkuData(skuId);
+            if (cachedValue is not null)
             {
-                _skuHandler.UpdateBalance(cachedValue < now ? now : cachedValue);
+                var value = cachedValue.ToInt64(CultureInfo.InvariantCulture);
+                _skuHandler.UpdateBalance(value < now ? now : value);
             }
             else
             {

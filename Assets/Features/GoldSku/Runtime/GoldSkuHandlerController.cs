@@ -24,12 +24,8 @@ namespace Features.GoldSku
         protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
             var skuId = (string)context;
-            var resultString = await _playerDataRepository.GetSkuData(skuId);
-            if (!int.TryParse(resultString, out var balance))
-            {
-                balance = 10;
-            }
-
+            var balance = await _playerDataRepository.GetSkuData(skuId) ?? 10;
+            
             _skuHandler.UpdateBalance(balance);
 
             await foreach (var _ in UniTaskAsyncEnumerable.EveryUpdate().WithCancellation(flowToken))
