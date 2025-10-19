@@ -16,5 +16,7 @@ MonoBehaviour:
     GameShopContext:
       _buildInDataResourcesAddress: DefaultGameShopData
       _cardPrefabAddress: CardPrefab
+      _gameShopSceneName: GameShop
+      _shopCardInfoSceneName: GameShopItemInfo
     BalanceBarContext:
       _balanceBarPrefabAddress: BalanceBar

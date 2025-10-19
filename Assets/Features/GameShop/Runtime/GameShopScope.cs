@@ -11,6 +11,7 @@ namespace Features.GameShop
             builder.Register<GameShopSceneController>(Lifetime.Transient);
             builder.Register<GameShopCardController>(Lifetime.Transient);
             builder.Register<PopulateGameShopBuildInDataController>(Lifetime.Transient);
+            builder.Register<GameShopCardInfoSceneController>(Lifetime.Transient);
 
             builder.Register<IGameShopService, GameShopService>(Lifetime.Singleton);
         }

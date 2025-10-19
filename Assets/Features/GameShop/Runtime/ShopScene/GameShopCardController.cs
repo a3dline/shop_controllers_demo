@@ -33,7 +33,9 @@ namespace Features.GameShop
             var view = instance.GetComponent<ShopCardView>();
 
             view.PurchaseBtnWasClicked += () => PurchaseFlow(view, bundle, flowToken).Forget();
+            view.InfoBtnWasClicked += () => StartAndWait<GameShopCardInfoSceneController>(flowToken).Forget();
             view.SetHeaderText(bundle.Title);
+            view.EnableInfoBtn = cardContext.DisplayInfoBtn;
             
             PurchaseButtonEnabledFlow(view, bundle, flowToken).Forget();
             return UniTask.WaitUntilCanceled(flowToken);

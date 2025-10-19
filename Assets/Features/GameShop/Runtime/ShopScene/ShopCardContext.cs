@@ -2,10 +2,12 @@
 
 namespace Features.GameShop
 {
-    internal class ShopCardContext
+    internal record ShopCardContext
     {
         public BundleData Bundle;
         public GameObject Prefab;
         public Transform Parent;
+        public string ShopCardInfoSceneName;
+        public bool DisplayInfoBtn;
     }
 }

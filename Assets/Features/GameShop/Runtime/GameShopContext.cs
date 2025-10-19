@@ -15,8 +15,12 @@ namespace Features.GameShop
         [SerializeField]
         private string _gameShopSceneName = "GameShop";
         
+        [SerializeField]
+        private string _shopCardInfoSceneName = "ShopCardInfo";
+        
         public string BuildInDataResourcesAddress => _buildInDataResourcesAddress;
         public string CardPrefabAddress => _cardPrefabAddress;
         public string GameShopSceneName => _gameShopSceneName;
+        public string ShopCardInfoSceneName => _shopCardInfoSceneName;
     }
 }

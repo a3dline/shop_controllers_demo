@@ -52,7 +52,9 @@ namespace Features.GameShop
                                   {
                                       Bundle = bundle,
                                       Prefab = cardPrefabHolder.Asset,
-                                      Parent = shopView.CardsContainer
+                                      Parent = shopView.CardsContainer,
+                                      ShopCardInfoSceneName = gameShopContext.ShopCardInfoSceneName,
+                                      DisplayInfoBtn = true
                                   };
                 StartAndWait<GameShopCardController>(cardContext, flowToken).Forget();
             }
