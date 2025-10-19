@@ -49,7 +49,7 @@ namespace Features.GameShop
         {
             var requestDto = new BundleRequestDto
                              {
-                                 BundleId = bundle.Id
+                                 BundleId = bundle.BundleId
                              };
 
             var response =

@@ -5,18 +5,18 @@ using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using UnityEngine;
 
-namespace Features.HealthSku
+namespace Features.LocationSku
 {
-    internal class HealthSkuHandlerController : ControllerBase
+    internal class LocationSkuHandlerController : ControllerBase
     {
-        private const string SkuId = "health";
+        private const string SkuId = "location";
+        
+        private readonly ISkuHandlerInternal _skuHandler;
         private readonly IPlayerDataRepositoryWrapper _playerDataRepository;
 
-        private readonly ISkuHandlerInternal _skuHandler;
-
-        public HealthSkuHandlerController(IControllerFactory controllerFactory,
-                                          ISkuHandlerInternal skuHandler,
-                                          IPlayerDataRepositoryWrapper playerDataRepository) : base(controllerFactory)
+        public LocationSkuHandlerController(IControllerFactory controllerFactory,
+                                            ISkuHandlerInternal skuHandler,
+                                            IPlayerDataRepositoryWrapper playerDataRepository) : base(controllerFactory)
         {
             _skuHandler = skuHandler;
             _playerDataRepository = playerDataRepository;
@@ -24,13 +24,12 @@ namespace Features.HealthSku
 
         protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
-            var resultString = await _playerDataRepository.GetSkuData(SkuId);
-            if (int.TryParse(resultString, out var result))
+            var location = await _playerDataRepository.GetSkuData(SkuId);
+            if (location != null)
             {
-                _skuHandler.UpdateBalance(result);    
+                _skuHandler.UpdateBalance(location);    
             }
-
-
+            
             await foreach (var _ in UniTaskAsyncEnumerable.EveryUpdate().WithCancellation(flowToken))
             {
                 if (!_skuHandler.IsDirty)
@@ -40,7 +39,7 @@ namespace Features.HealthSku
 
                 var newBalance = _skuHandler.TakeNewBalanceAndClear();
 
-                Debug.Log("Updated health balance: " + newBalance);
+                Debug.Log("Updated current location: " + newBalance);
 
                 await _playerDataRepository.UpdateSku(SkuId, newBalance.ToString(CultureInfo.InvariantCulture));
                 _skuHandler.UpdateBalance(newBalance);

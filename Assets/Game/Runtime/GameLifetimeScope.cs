@@ -1,6 +1,7 @@
 ﻿using Core;
 using Features.GoldSku;
 using Features.HealthSku;
+using Features.LocationSku;
 using Features.VipSku;
 using UnityEngine;
 using VContainer;
@@ -22,7 +23,8 @@ namespace Game
             // The workaround is to create a custom build step that will generate all installer types into a resource file.
             new GoldSkuInstaller(),
             new HealthSkuInstaller(),
-            new VipSkuInstaller()
+            new VipSkuInstaller(),
+            new LocationSkuInstaller()
         };
 
         protected override void Configure(IContainerBuilder builder)

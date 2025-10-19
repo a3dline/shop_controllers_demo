@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Cysharp.Threading.Tasks;
 
 namespace Core
 {
-    public abstract class SkuHandler : ISkuHandlerInternal
+    public abstract class SkuHandlerWithTransactions : ISkuHandlerInternal
     {
         private readonly AsyncReactiveProperty<string> _balanceStringProperty = new("0");
         protected readonly List<IConvertible> TransactionsQueue = new();
@@ -24,10 +23,10 @@ namespace Core
         public void UpdateBalance(IConvertible amount)
         {
             CurrentBalance = amount;
-            UpdateBalance();
+            RaiseBalanceStringChange();
         }
 
-        public void UpdateBalance()
+        public void RaiseBalanceStringChange()
         {
             _balanceStringProperty.Value = GetBalanceString(CurrentBalance);
         }

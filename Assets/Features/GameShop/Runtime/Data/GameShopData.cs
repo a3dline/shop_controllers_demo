@@ -15,7 +15,7 @@ namespace Features.GameShop
         public SkuData[] PurchaseData;
         public SkuData[] RewardData;
         public string Title;
-        public string Id;
+        public string BundleId;
     }
 
     [Serializable]

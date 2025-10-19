@@ -23,12 +23,22 @@ namespace Features.VipSku
             _playerDataRepository = playerDataRepository;
         }
 
-        protected override UniTask AsyncFlow(object context, CancellationToken flowToken)
+        protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
-            _skuHandler.UpdateBalance(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+            var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var cachedValueString = await _playerDataRepository.GetSkuData(SkuId);
+            if (long.TryParse(cachedValueString, out var cachedValue))
+            {
+                _skuHandler.UpdateBalance(cachedValue < now ? now : cachedValue);    
+            }
+            else
+            {
+                _skuHandler.UpdateBalance(now);
+            }
+
             TransactionsFlowAsync(flowToken).Forget();
             UpdateBalanceFlowAsync(flowToken).Forget();
-            return UniTask.WaitUntilCanceled(flowToken);
+            await UniTask.WaitUntilCanceled(flowToken);
         }
 
         private async UniTaskVoid UpdateBalanceFlowAsync(CancellationToken flowToken)
@@ -36,7 +46,7 @@ namespace Features.VipSku
             await foreach (var _ in UniTaskAsyncEnumerable.Interval(TimeSpan.FromSeconds(1))
                                                           .WithCancellation(flowToken))
             {
-                _skuHandler.UpdateBalance();
+                _skuHandler.RaiseBalanceStringChange();
             }
         }
 

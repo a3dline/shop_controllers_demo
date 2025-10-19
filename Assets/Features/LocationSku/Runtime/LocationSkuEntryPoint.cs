@@ -3,16 +3,16 @@ using Core;
 using Cysharp.Threading.Tasks;
 using VContainer.Unity;
 
-namespace Features.VipSku
+namespace Features.LocationSku
 {
-    public class VipSkuEntryPoint : RootControllerBase, IAsyncStartable
+    internal class LocationSkuEntryPoint : RootControllerBase, IAsyncStartable
     {
         private readonly ISkuHandler _skuHandler;
         private readonly ISkuRegistrationService _skuRegistrationService;
 
-        public VipSkuEntryPoint(IControllerFactory controllerFactory,
-                                ISkuRegistrationService skuRegistrationService,
-                                ISkuHandler skuHandler)
+        public LocationSkuEntryPoint(IControllerFactory controllerFactory,
+                                     ISkuRegistrationService skuRegistrationService,
+                                     ISkuHandler skuHandler)
             : base(controllerFactory)
         {
             _skuRegistrationService = skuRegistrationService;
@@ -29,13 +29,13 @@ namespace Features.VipSku
         {
             var registry = new SkuRegistry
                            {
-                               SkuId = "vip_sku",
-                               DisplayName = "VIP", 
+                               SkuId = "location_sku",
+                               DisplayName = "Location",
                                Handler = _skuHandler
                            };
             _skuRegistrationService.Register(registry);
 
-            return StartAndWait<VipSkuHandlerController>(flowToken);
+            return StartAndWait<LocationSkuHandlerController>(flowToken);
         }
     }
 }

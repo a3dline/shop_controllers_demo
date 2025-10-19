@@ -8,6 +8,7 @@
     "Features.BalanceBar.Runtime",
     "Features.GoldSku.Runtime",
     "Features.Health.Runtime",
-    "Features.VipSku.Runtime"
+    "Features.VipSku.Runtime",
+    "Features.LocationSku.Runtime"
   ]
 }

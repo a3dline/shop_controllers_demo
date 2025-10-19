@@ -1,0 +1,9 @@
+﻿{
+  "name": "Features.LocationSku.Runtime",
+  "references": [
+    "UniTask",
+    "UniTask.Linq",
+    "VContainer",
+    "Core.Runtime"
+  ]
+}

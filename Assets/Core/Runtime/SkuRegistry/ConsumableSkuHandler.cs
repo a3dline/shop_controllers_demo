@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Core
 {
-    public class ConsumableSkuHandler : SkuHandler
+    public class ConsumableSkuHandler : SkuHandlerWithTransactions
     {
         private CultureInfo CultureInfo => CultureInfo.InvariantCulture;
 

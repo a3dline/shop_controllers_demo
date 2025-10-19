@@ -25,9 +25,10 @@ namespace Features.GoldSku
         protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
             var resultString = await _playerDataRepository.GetSkuData(SkuId);
-            int.TryParse(resultString, out var result);
-            
-            _skuHandler.UpdateBalance(result);
+            if (int.TryParse(resultString, out var result))
+            {
+                _skuHandler.UpdateBalance(result);    
+            }
             
             await foreach (var _ in UniTaskAsyncEnumerable.EveryUpdate().WithCancellation(flowToken))
             {
@@ -40,7 +41,7 @@ namespace Features.GoldSku
 
                 Debug.Log("Updated gold balance: " + newBalance);
 
-                await _playerDataRepository.UpdateSku(SkuId, result.ToString(CultureInfo.InvariantCulture));
+                await _playerDataRepository.UpdateSku(SkuId, newBalance.ToString(CultureInfo.InvariantCulture));
                 _skuHandler.UpdateBalance(newBalance);
             }
         }

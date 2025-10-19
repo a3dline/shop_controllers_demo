@@ -8,7 +8,7 @@ namespace Features.VipSku
     {
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.Register<ISkuHandlerInternal, ISkuHandler, TimeSpanSkuHandler>(Lifetime.Singleton);
+            builder.Register<ISkuHandlerInternal, ISkuHandler, ConsumableTimeSpanSkuHandler>(Lifetime.Singleton);
             builder.RegisterEntryPoint<VipSkuEntryPoint>();
             builder.Register<VipSkuHandlerController>(Lifetime.Transient);
         }
