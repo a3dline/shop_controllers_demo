@@ -12,11 +12,11 @@ namespace Features.GameShop
     internal class GameShopSceneController : SceneControllerBase
     {
         private readonly IAssetProvider _assetProvider;
-        private readonly IGameShopService _shopService;
         private readonly IEventBus _eventBus;
+        private readonly IGameShopService _shopService;
 
         public GameShopSceneController(IControllerFactory controllerFactory,
-                                       [Key(ISceneProvider.Type.BuildIn)] ISceneProvider sceneProvider,
+                                       ISceneProvider sceneProvider,
                                        [Key(IAssetProvider.Type.Addressable)] IAssetProvider assetProvider,
                                        IGameShopService shopService,
                                        IEventBus eventBus)
@@ -34,7 +34,7 @@ namespace Features.GameShop
             var gameShopSceneContext = (GameShopSceneContext)sceneContext;
             var gameShopContext = (GameShopContext)context;
             var shopView = gameShopSceneContext.ShopView;
-            
+
             var displayBalanceBarEvent = new DisplayBalanceBarEvent();
             displayBalanceBarEvent.DisplayToken = flowToken;
             displayBalanceBarEvent.Parent = gameShopSceneContext.BalanceBarParent;

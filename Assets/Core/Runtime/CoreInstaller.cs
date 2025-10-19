@@ -12,8 +12,7 @@ namespace Core
             builder.Register<IControllerFactory, VContainerControllerFactory>(Lifetime.Scoped);
 
             // Services
-            builder.Register<ISceneProvider, BuildInSceneProvider>(Lifetime.Singleton)
-                   .Keyed(ISceneProvider.Type.BuildIn);
+            builder.Register<ISceneProvider, BuildInSceneProvider>(Lifetime.Singleton);
             
             builder.Register<IAssetProvider, AddressableAssetProvider>(Lifetime.Singleton)
                    .Keyed(IAssetProvider.Type.Addressable);
