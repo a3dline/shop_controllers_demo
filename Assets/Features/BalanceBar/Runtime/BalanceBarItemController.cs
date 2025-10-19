@@ -29,7 +29,7 @@ namespace Features.BalanceBar
             var displayName = _skuRegistrationService.GetSkuDisplayName(skuHandler.Id);
             view.SetLabel(displayName);
             
-            await foreach (var value in skuHandler.BalanceStringProperty.WithCancellation(flowToken))
+            await foreach (var value in skuHandler.BalanceString.WithCancellation(flowToken))
             {
                 view.SetBalance(value);
             }

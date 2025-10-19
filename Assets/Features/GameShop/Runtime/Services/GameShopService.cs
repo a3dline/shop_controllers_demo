@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using AUniTaskSemaphore;
@@ -54,8 +55,8 @@ namespace Features.GameShop
 
             var response =
                 await _backendClient.PostAsync<BundleRequestDto, BundleResponseDto>("game-shop/purchase-bundle",
-                     requestDto,
-                     token);
+                 requestDto,
+                 token);
 
             if (response.Status == ResponseStatus.Failure)
             {
@@ -76,6 +77,15 @@ namespace Features.GameShop
 
             return true;
         }
+
+        public IReadOnlyAsyncReactivePropertyDisposable<bool> CanPurchaseItemProperty(BundleData bundle)
+        {
+            var handlers = bundle.PurchaseData
+                                 .Select(sku => new ValueTuple<ISkuHandler, IConvertible>(_skuRegistrationService.GetSkuHandler(sku.SkuId), sku.Amount))
+                                 .ToList();
+            
+            return new CanPurchaseItemProperty(handlers);
+        }
     }
 
     [Serializable]
@@ -90,6 +100,4 @@ namespace Features.GameShop
         public string Error;
         public ResponseStatus Status;
     }
-
-    
 }

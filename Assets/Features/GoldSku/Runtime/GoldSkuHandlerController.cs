@@ -9,12 +9,13 @@ namespace Features.GoldSku
 {
     internal class GoldSkuHandlerController : ControllerBase
     {
-        private readonly ISkuHandlerInternal _skuHandler;
         private readonly IPlayerDataRepositoryWrapper _playerDataRepository;
+        private readonly ISkuHandlerInternal _skuHandler;
 
         public GoldSkuHandlerController(IControllerFactory controllerFactory,
                                         ISkuHandlerInternal skuHandler,
-                                        IPlayerDataRepositoryWrapper playerDataRepository) : base(controllerFactory)
+                                        IPlayerDataRepositoryWrapper playerDataRepository)
+            : base(controllerFactory)
         {
             _skuHandler = skuHandler;
             _playerDataRepository = playerDataRepository;
@@ -28,9 +29,9 @@ namespace Features.GoldSku
             {
                 balance = 10;
             }
-            
-            _skuHandler.UpdateBalance(balance);    
-            
+
+            _skuHandler.UpdateBalance(balance);
+
             await foreach (var _ in UniTaskAsyncEnumerable.EveryUpdate().WithCancellation(flowToken))
             {
                 if (!_skuHandler.IsDirty)

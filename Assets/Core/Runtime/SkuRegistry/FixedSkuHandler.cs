@@ -20,7 +20,7 @@ namespace Core
         {
             return true;
         }
-        public IReadOnlyAsyncReactiveProperty<string> BalanceStringProperty => _balanceStringProperty;
+        public IReadOnlyAsyncReactiveProperty<string> BalanceString => _balanceStringProperty;
 
         string ISkuHandler.Id { get; set; }
 

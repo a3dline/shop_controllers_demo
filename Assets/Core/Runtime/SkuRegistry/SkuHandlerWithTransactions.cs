@@ -6,7 +6,7 @@ namespace Core
 {
     public abstract class SkuHandlerWithTransactions : ISkuHandlerInternal
     {
-        private readonly AsyncReactiveProperty<string> _balanceStringProperty = new("0");
+        protected readonly AsyncReactiveProperty<string> BalanceStringProperty = new("0");
         protected readonly List<IConvertible> TransactionsQueue = new();
 
         protected IConvertible CurrentBalance;
@@ -20,15 +20,10 @@ namespace Core
 
         public bool IsDirty => TransactionsQueue.Count > 0;
 
-        public void UpdateBalance(IConvertible amount)
+        public virtual void UpdateBalance(IConvertible amount)
         {
             CurrentBalance = amount;
-            RaiseBalanceStringChange();
-        }
-
-        public void RaiseBalanceStringChange()
-        {
-            _balanceStringProperty.Value = GetBalanceString(CurrentBalance);
+            BalanceStringProperty.Value = GetBalanceString(CurrentBalance);
         }
 
         public void AddTransaction(IConvertible amount)
@@ -38,7 +33,7 @@ namespace Core
 
         public abstract bool IsValidTransaction(IConvertible amount);
 
-        public IReadOnlyAsyncReactiveProperty<string> BalanceStringProperty => _balanceStringProperty;
+        public IReadOnlyAsyncReactiveProperty<string> BalanceString => BalanceStringProperty;
 
         string ISkuHandler.Id { get; set; }
 

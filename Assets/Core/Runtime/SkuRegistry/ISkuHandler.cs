@@ -7,7 +7,7 @@ namespace Core
     {
         void AddTransaction(IConvertible amount);
         bool IsValidTransaction(IConvertible amount);
-        IReadOnlyAsyncReactiveProperty<string> BalanceStringProperty { get; }
+        IReadOnlyAsyncReactiveProperty<string> BalanceString { get; }
         string Id { get; internal set; }
     }
 }

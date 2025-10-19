@@ -9,7 +9,7 @@ namespace Core
 
         public override bool IsValidTransaction(IConvertible amount)
         {
-            return amount.ToInt32(CultureInfo) >= CurrentBalance.ToInt32(CultureInfo);
+            return CurrentBalance.ToInt32(CultureInfo) + amount.ToInt32(CultureInfo) >= 0;
         }
 
         protected override IConvertible CalculateBalanceFromTransactions()

@@ -10,12 +10,12 @@ namespace Features.HealthSku
     internal class HealthSkuHandlerController : ControllerBase
     {
         private readonly IPlayerDataRepositoryWrapper _playerDataRepository;
-
         private readonly ISkuHandlerInternal _skuHandler;
 
         public HealthSkuHandlerController(IControllerFactory controllerFactory,
                                           ISkuHandlerInternal skuHandler,
-                                          IPlayerDataRepositoryWrapper playerDataRepository) : base(controllerFactory)
+                                          IPlayerDataRepositoryWrapper playerDataRepository)
+            : base(controllerFactory)
         {
             _skuHandler = skuHandler;
             _playerDataRepository = playerDataRepository;

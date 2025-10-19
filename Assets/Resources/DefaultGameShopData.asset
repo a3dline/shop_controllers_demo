@@ -21,7 +21,7 @@ MonoBehaviour:
       - SkuId: health_sku
         Amount: 1
       Title: Test Data
-      Id: 1
+      BundleId: 
     - PurchaseData:
       - SkuId: gold_sku
         Amount: -1
@@ -29,4 +29,12 @@ MonoBehaviour:
       - SkuId: vip_sku
         Amount: 60
       Title: Test Data
-      Id: 2
+      BundleId: 
+    - PurchaseData:
+      - SkuId: vip_sku
+        Amount: -15
+      RewardData:
+      - SkuId: gold_sku
+        Amount: 1
+      Title: Buy gold from VIP
+      BundleId: 3
