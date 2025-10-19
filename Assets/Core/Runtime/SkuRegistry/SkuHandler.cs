@@ -11,7 +11,6 @@ namespace Core
         protected readonly List<IConvertible> TransactionsQueue = new();
 
         protected IConvertible CurrentBalance;
-        protected abstract CultureInfo CultureInfo { get; }
 
         public IConvertible TakeNewBalanceAndClear()
         {
@@ -25,8 +24,12 @@ namespace Core
         public void UpdateBalance(IConvertible amount)
         {
             CurrentBalance = amount;
-            var balanceString = amount.ToString(CultureInfo);
-            _balanceStringProperty.Value = balanceString;
+            UpdateBalance();
+        }
+
+        public void UpdateBalance()
+        {
+            _balanceStringProperty.Value = GetBalanceString(CurrentBalance);
         }
 
         public void AddTransaction(IConvertible amount)
@@ -41,5 +44,6 @@ namespace Core
         string ISkuHandler.Id { get; set; }
 
         protected abstract IConvertible CalculateBalanceFromTransactions();
+        protected abstract string GetBalanceString(IConvertible amount);
     }
 }

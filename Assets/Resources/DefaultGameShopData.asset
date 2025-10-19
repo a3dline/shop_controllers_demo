@@ -18,7 +18,15 @@ MonoBehaviour:
       - SkuId: gold_sku
         Amount: -1
       RewardData:
-      - SkuId: pol_sku
+      - SkuId: health_sku
         Amount: 1
       Title: Test Data
-      Id: w4c5t3y45vc45
+      Id: 1
+    - PurchaseData:
+      - SkuId: gold_sku
+        Amount: -1
+      RewardData:
+      - SkuId: vip_sku
+        Amount: 60
+      Title: Test Data
+      Id: 2

@@ -1,0 +1,9 @@
+﻿{
+  "name": "Features.VipSku.Runtime",
+  "references": [
+    "UniTask",
+    "UniTask.Linq",
+    "VContainer",
+    "Core.Runtime"
+  ]
+}

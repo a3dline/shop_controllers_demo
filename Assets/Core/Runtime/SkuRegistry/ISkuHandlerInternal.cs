@@ -7,5 +7,6 @@ namespace Core
         IConvertible TakeNewBalanceAndClear();
         bool IsDirty { get; }
         void UpdateBalance(IConvertible amount);
+        void UpdateBalance();
     }
 }

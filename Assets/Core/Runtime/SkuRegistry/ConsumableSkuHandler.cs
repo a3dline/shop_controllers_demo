@@ -5,7 +5,7 @@ namespace Core
 {
     public class ConsumableSkuHandler : SkuHandler
     {
-        protected override CultureInfo CultureInfo => CultureInfo.InvariantCulture;
+        private CultureInfo CultureInfo => CultureInfo.InvariantCulture;
 
         public override bool IsValidTransaction(IConvertible amount)
         {
@@ -21,6 +21,11 @@ namespace Core
             }
 
             return current;
+        }
+
+        protected override string GetBalanceString(IConvertible amount)
+        {
+            return amount.ToString(CultureInfo);
         }
     }
 }
