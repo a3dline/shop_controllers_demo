@@ -8,12 +8,12 @@ namespace Features.LocationSku
     internal class LocationSkuEntryPoint : RootControllerBase, IAsyncStartable
     {
         private const string SkuId = "location_sku";
-        private readonly ISkuHandler _skuHandler;
+        private readonly ISkuHandlerInternal _skuHandler;
         private readonly ISkuRegistrationService _skuRegistrationService;
 
         public LocationSkuEntryPoint(IControllerFactory controllerFactory,
                                      ISkuRegistrationService skuRegistrationService,
-                                     ISkuHandler skuHandler)
+                                     ISkuHandlerInternal skuHandler)
             : base(controllerFactory)
         {
             _skuRegistrationService = skuRegistrationService;
@@ -34,6 +34,7 @@ namespace Features.LocationSku
                                DisplayName = "Location",
                                Handler = _skuHandler
                            };
+            _skuHandler.DefaultBalance = "default";
             _skuRegistrationService.Register(registry);
 
             return StartAndWait<LocationSkuHandlerController>(SkuId, flowToken);

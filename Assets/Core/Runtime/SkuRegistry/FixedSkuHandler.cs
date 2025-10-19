@@ -23,6 +23,12 @@ namespace Core
         public IReadOnlyAsyncReactiveProperty<string> BalanceString => _balanceStringProperty;
 
         string ISkuHandler.SkuId { get; set; }
+        public IConvertible DefaultBalance { get; set; }
+        public IConvertible Balance => _value;
+        public IConvertible Add(IConvertible a, IConvertible b)
+        {
+            return b;
+        }
 
         public IConvertible TakeNewBalanceAndClear()
         {
@@ -33,10 +39,6 @@ namespace Core
         public void UpdateBalance(IConvertible amount)
         {
             _value = amount;
-            RaiseBalanceStringChange();
-        }
-        public void RaiseBalanceStringChange()
-        {
             _balanceStringProperty.Value = _value.ToString(CultureInfo.InvariantCulture);
         }
     }

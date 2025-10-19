@@ -15,7 +15,7 @@ namespace Features.HealthSku
         protected override IConvertible CalculateBalanceFromTransactions()
         {
             var value = base.CalculateBalanceFromTransactions().ToInt32(CultureInfo.InvariantCulture);
-            return Math.Clamp(value, 0, 100);
+            return Math.Min(value, 100);
         }
     }
 }

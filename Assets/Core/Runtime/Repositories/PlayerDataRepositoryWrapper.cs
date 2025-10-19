@@ -6,12 +6,12 @@ using Cysharp.Threading.Tasks;
 
 namespace Core
 {
-    internal class PlayerDataRepositoryWrapper : IPlayerDataRepositoryWrapper
+    internal class PlayerDataRepositoryWrapper : DisposableBase, IPlayerDataRepository
     {
         private const string SKUPrefix = "sku_";
 
         private readonly IRepository _repository;
-        private Dictionary<string, AsyncReactiveProperty<IConvertible>> _skuProperties = new();
+        private readonly Dictionary<string, AsyncReactiveProperty<IConvertible>> _skuProperties = new();
 
         public PlayerDataRepositoryWrapper(IRepository repository)
         {
@@ -25,9 +25,16 @@ namespace Core
             property.Value = data;
         }
 
-        public async UniTask<IReadOnlyAsyncReactiveProperty<IConvertible>> GetSkuPropertyAsync(string skuId, CancellationToken token)
+        public async UniTask<IReadOnlyAsyncReactiveProperty<IConvertible>> GetSkuPropertyAsync(
+            string skuId,
+            CancellationToken token)
         {
             var value = await _repository.GetAsync(SKUPrefix + skuId, token);
+            if (string.IsNullOrEmpty(value))
+            {
+                value = null;
+            }
+
             var property = GetOrCreateSkuProperty(skuId, value);
             property.Value = value;
             return property;
@@ -42,6 +49,21 @@ namespace Core
             }
 
             return property;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            foreach (var property in _skuProperties.Values)
+            {
+                property.Dispose();
+            }
+
+            _skuProperties.Clear();
         }
     }
 }

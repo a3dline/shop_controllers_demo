@@ -9,5 +9,8 @@ namespace Core
         bool IsValidTransaction(IConvertible amount);
         IReadOnlyAsyncReactiveProperty<string> BalanceString { get; }
         string SkuId { get; internal set; }
+        IConvertible DefaultBalance { get; }
+        IConvertible Balance { get; }
+        IConvertible Add(IConvertible a, IConvertible b);
     }
 }

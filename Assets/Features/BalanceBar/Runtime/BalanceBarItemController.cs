@@ -7,12 +7,15 @@ namespace Features.BalanceBar
 {
     public class BalanceBarItemController : ControllerBase
     {
+        private readonly IPlayerDataRepository _playerData;
         private readonly ISkuRegistrationService _skuRegistrationService;
 
         public BalanceBarItemController(IControllerFactory controllerFactory,
-                                        ISkuRegistrationService skuRegistrationService) : base(controllerFactory)
+                                        ISkuRegistrationService skuRegistrationService,
+                                        IPlayerDataRepository playerData) : base(controllerFactory)
         {
             _skuRegistrationService = skuRegistrationService;
+            _playerData = playerData;
         }
 
         protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
@@ -28,11 +31,18 @@ namespace Features.BalanceBar
             var view = instance.GetComponent<BalanceBarItemView>();
             var displayName = _skuRegistrationService.GetSkuDisplayName(skuHandler.SkuId);
             view.SetLabel(displayName);
-            
+            view.PlusButtonWasClicked += () => AddValueToRepository(skuHandler, flowToken);
+
             await foreach (var value in skuHandler.BalanceString.WithCancellation(flowToken))
             {
                 view.SetBalance(value);
             }
+        }
+
+        private void AddValueToRepository(ISkuHandler skuHandler, CancellationToken token)
+        {
+            var newBalance = skuHandler.Add(skuHandler.DefaultBalance, skuHandler.Balance);
+            _playerData.UpdateSku(skuHandler.SkuId, newBalance, token);
         }
     }
 }

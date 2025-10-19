@@ -10,12 +10,12 @@ namespace Features.LocationSku
 {
     internal class LocationSkuHandlerController : ControllerBase
     {
-        private readonly IPlayerDataRepositoryWrapper _playerDataRepository;
+        private readonly IPlayerDataRepository _playerDataRepository;
         private readonly ISkuHandlerInternal _skuHandler;
 
         public LocationSkuHandlerController(IControllerFactory controllerFactory,
                                             ISkuHandlerInternal skuHandler,
-                                            IPlayerDataRepositoryWrapper playerDataRepository)
+                                            IPlayerDataRepository playerDataRepository)
             : base(controllerFactory)
         {
             _skuHandler = skuHandler;
@@ -31,7 +31,7 @@ namespace Features.LocationSku
 
             if (repositoryProperty.Value is null)
             {
-                await _playerDataRepository.UpdateSku(skuId, "default", flowToken);
+                await _playerDataRepository.UpdateSku(skuId, _skuHandler.DefaultBalance, flowToken);
             }
 
             await UniTask.WaitUntilCanceled(flowToken);
@@ -40,9 +40,12 @@ namespace Features.LocationSku
         private async UniTaskVoid UpdateBalanceAsyncFlow(IReadOnlyAsyncReactiveProperty<IConvertible> property,
                                                          CancellationToken flowToken)
         {
-            await foreach (var value in property.WithCancellation(flowToken))
+            await foreach (var value in property
+                                        .Where(x => x is not null)
+                                        .WithCancellation(flowToken))
             {
                 _skuHandler.UpdateBalance(value);
+                Debug.Log("Updated current location: " + value);
             }
         }
 
@@ -56,8 +59,6 @@ namespace Features.LocationSku
                 }
 
                 var newBalance = _skuHandler.TakeNewBalanceAndClear();
-
-                Debug.Log("Updated current location: " + newBalance);
 
                 await _playerDataRepository.UpdateSku(skuId,
                                                       newBalance.ToString(CultureInfo.InvariantCulture),

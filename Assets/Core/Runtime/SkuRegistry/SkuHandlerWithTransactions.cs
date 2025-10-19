@@ -9,7 +9,7 @@ namespace Core
         protected readonly AsyncReactiveProperty<string> BalanceStringProperty = new("0");
         protected readonly List<IConvertible> TransactionsQueue = new();
 
-        protected IConvertible CurrentBalance;
+        private IConvertible _balance;
 
         public IConvertible TakeNewBalanceAndClear()
         {
@@ -22,8 +22,8 @@ namespace Core
 
         public virtual void UpdateBalance(IConvertible amount)
         {
-            CurrentBalance = amount;
-            BalanceStringProperty.Value = GetBalanceString(CurrentBalance);
+            _balance = amount;
+            BalanceStringProperty.Value = GetBalanceString(_balance);
         }
 
         public void AddTransaction(IConvertible amount)
@@ -36,7 +36,9 @@ namespace Core
         public IReadOnlyAsyncReactiveProperty<string> BalanceString => BalanceStringProperty;
 
         string ISkuHandler.SkuId { get; set; }
-
+        public IConvertible DefaultBalance { get; set; }
+        public IConvertible Balance => _balance;
+        public abstract IConvertible Add(IConvertible a, IConvertible b);
         protected abstract IConvertible CalculateBalanceFromTransactions();
         protected abstract string GetBalanceString(IConvertible amount);
     }

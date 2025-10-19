@@ -12,6 +12,12 @@ namespace Core
 
         private CultureInfo CultureInfo => CultureInfo.InvariantCulture;
 
+        public void Dispose()
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+        }
+
         public override void UpdateBalance(IConvertible amount)
         {
             base.UpdateBalance(amount);
@@ -19,19 +25,20 @@ namespace Core
             var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             if (current >= now)
             {
-                UpdateBalanceStringFlow().Forget();    
+                UpdateBalanceStringFlow().Forget();
             }
         }
 
         private async UniTaskVoid UpdateBalanceStringFlow()
         {
-            await foreach (var _ in UniTaskAsyncEnumerable.Interval(TimeSpan.FromSeconds(1)).WithCancellation(_cts.Token))
+            await foreach (var _ in UniTaskAsyncEnumerable.Interval(TimeSpan.FromSeconds(1))
+                                                          .WithCancellation(_cts.Token))
             {
-                var current = Convert.ToInt64(CurrentBalance, CultureInfo);
+                var current = Convert.ToInt64(Balance, CultureInfo);
                 var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 if (current >= now)
                 {
-                    BalanceStringProperty.Value = GetBalanceString(CurrentBalance);    
+                    BalanceStringProperty.Value = GetBalanceString(Balance);
                 }
                 else
                 {
@@ -42,22 +49,25 @@ namespace Core
 
         public override bool IsValidTransaction(IConvertible amount)
         {
-            var a = Convert.ToInt64(amount, CultureInfo);
             var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            var current = Convert.ToInt64(CurrentBalance, CultureInfo);
-            return current + a > now;
+            return Add(Balance, amount).ToInt64(CultureInfo) > now;
+        }
+
+        public override IConvertible Add(IConvertible a, IConvertible b)
+        {
+            return Convert.ToInt64(a, CultureInfo) + Convert.ToInt64(b, CultureInfo);
         }
 
         protected override IConvertible CalculateBalanceFromTransactions()
         {
             var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            var current = Convert.ToInt64(CurrentBalance, CultureInfo);
+            var current = Convert.ToInt64(Balance, CultureInfo);
 
-            var summ = current < now ? now : current;
-            
+            IConvertible summ = current < now ? now : current;
+
             foreach (var transaction in TransactionsQueue)
             {
-                summ += Convert.ToInt64(transaction, CultureInfo);
+                summ = Add(summ, transaction);
             }
 
             return summ;
@@ -77,12 +87,6 @@ namespace Core
             var timeSpan = TimeSpan.FromSeconds(delta);
             var stringDelta = timeSpan.ToString(@"hh\:mm\:ss");
             return stringDelta;
-        }
-
-        public void Dispose()
-        {
-            _cts.Cancel();
-            _cts.Dispose();
         }
     }
 }

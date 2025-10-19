@@ -9,18 +9,23 @@ namespace Core
 
         public override bool IsValidTransaction(IConvertible amount)
         {
-            return CurrentBalance.ToInt32(CultureInfo) + amount.ToInt32(CultureInfo) >= 0;
+            return Add(Balance, amount).ToInt32(CultureInfo)  >= 0;
+        }
+
+        public override IConvertible Add(IConvertible a, IConvertible b)
+        {
+            return a.ToInt32(CultureInfo) + b.ToInt32(CultureInfo);
         }
 
         protected override IConvertible CalculateBalanceFromTransactions()
         {
-            var current = Convert.ToInt32(CurrentBalance, CultureInfo);
+            var summ = Balance;
             foreach (var transaction in TransactionsQueue)
             {
-                current += Convert.ToInt32(transaction, CultureInfo);
+                summ = Add(summ, transaction);
             }
 
-            return current;
+            return summ;
         }
 
         protected override string GetBalanceString(IConvertible amount)

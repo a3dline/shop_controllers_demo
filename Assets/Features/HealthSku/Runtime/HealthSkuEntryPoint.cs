@@ -8,12 +8,12 @@ namespace Features.HealthSku
     public class HealthSkuEntryPoint : RootControllerBase, IAsyncStartable
     {
         private const string SkuId = "health_sku";
-        private readonly ISkuHandler _skuHandler;
+        private readonly ISkuHandlerInternal _skuHandler;
         private readonly ISkuRegistrationService _skuRegistrationService;
 
         public HealthSkuEntryPoint(IControllerFactory controllerFactory,
                                    ISkuRegistrationService skuRegistrationService,
-                                   ISkuHandler skuHandler)
+                                   ISkuHandlerInternal skuHandler)
             : base(controllerFactory)
         {
             _skuRegistrationService = skuRegistrationService;
@@ -34,6 +34,7 @@ namespace Features.HealthSku
                                DisplayName = "Health",
                                Handler = _skuHandler
                            };
+            _skuHandler.DefaultBalance = 100;
             _skuRegistrationService.Register(registry);
 
             return StartAndWait<HealthSkuHandlerController>(SkuId, flowToken);
