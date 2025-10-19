@@ -22,7 +22,7 @@ namespace Core
                    .Keyed(IAssetProvider.Type.Resources);
 
             builder.Register<ISkuRegistrationService, SkuRegistrationService>(Lifetime.Singleton);
-            builder.Register<IRepository, InMemoryRepository>(Lifetime.Singleton);
+            builder.Register<IRepository, PlayerPrefsRepository>(Lifetime.Singleton);
             builder.Register<IPlayerDataRepositoryWrapper, PlayerDataRepositoryWrapper>(Lifetime.Singleton);
             builder.Register<IEventBus, EventBus>(Lifetime.Singleton);
             builder.Register<IBackendClient, FakeBackendClient>(Lifetime.Singleton);

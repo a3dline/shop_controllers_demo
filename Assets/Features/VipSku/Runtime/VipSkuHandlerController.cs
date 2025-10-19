@@ -10,9 +10,7 @@ namespace Features.VipSku
 {
     internal class VipSkuHandlerController : ControllerBase
     {
-        private const string SkuId = "health";
         private readonly IPlayerDataRepositoryWrapper _playerDataRepository;
-
         private readonly ISkuHandlerInternal _skuHandler;
 
         public VipSkuHandlerController(IControllerFactory controllerFactory,
@@ -25,8 +23,9 @@ namespace Features.VipSku
 
         protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
+            var skuId = (string)context;
             var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            var cachedValueString = await _playerDataRepository.GetSkuData(SkuId);
+            var cachedValueString = await _playerDataRepository.GetSkuData(skuId);
             if (long.TryParse(cachedValueString, out var cachedValue))
             {
                 _skuHandler.UpdateBalance(cachedValue < now ? now : cachedValue);    
@@ -36,7 +35,7 @@ namespace Features.VipSku
                 _skuHandler.UpdateBalance(now);
             }
 
-            TransactionsFlowAsync(flowToken).Forget();
+            TransactionsFlowAsync(skuId, flowToken).Forget();
             UpdateBalanceFlowAsync(flowToken).Forget();
             await UniTask.WaitUntilCanceled(flowToken);
         }
@@ -50,7 +49,7 @@ namespace Features.VipSku
             }
         }
 
-        private async UniTaskVoid TransactionsFlowAsync(CancellationToken flowToken)
+        private async UniTaskVoid TransactionsFlowAsync(string skuId, CancellationToken flowToken)
         {
             await foreach (var _ in UniTaskAsyncEnumerable.EveryUpdate().WithCancellation(flowToken))
             {
@@ -63,7 +62,7 @@ namespace Features.VipSku
 
                 Debug.Log("Updated VIP time: " + DateTimeOffset.FromUnixTimeSeconds(newBalance.ToInt64(CultureInfo.InvariantCulture)).DateTime);
 
-                await _playerDataRepository.UpdateSku(SkuId, newBalance.ToString(CultureInfo.InvariantCulture));
+                await _playerDataRepository.UpdateSku(skuId, newBalance.ToString(CultureInfo.InvariantCulture));
                 _skuHandler.UpdateBalance(newBalance);
             }
         }

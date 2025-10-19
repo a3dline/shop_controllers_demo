@@ -9,10 +9,9 @@ namespace Features.LocationSku
 {
     internal class LocationSkuHandlerController : ControllerBase
     {
-        private const string SkuId = "location";
-        
-        private readonly ISkuHandlerInternal _skuHandler;
         private readonly IPlayerDataRepositoryWrapper _playerDataRepository;
+
+        private readonly ISkuHandlerInternal _skuHandler;
 
         public LocationSkuHandlerController(IControllerFactory controllerFactory,
                                             ISkuHandlerInternal skuHandler,
@@ -24,12 +23,15 @@ namespace Features.LocationSku
 
         protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
-            var location = await _playerDataRepository.GetSkuData(SkuId);
+            var skuId = (string)context;
+            var location = await _playerDataRepository.GetSkuData(skuId);
             if (location != null)
             {
-                _skuHandler.UpdateBalance(location);    
+                location = "default";
             }
-            
+
+            _skuHandler.UpdateBalance(location);
+
             await foreach (var _ in UniTaskAsyncEnumerable.EveryUpdate().WithCancellation(flowToken))
             {
                 if (!_skuHandler.IsDirty)
@@ -41,7 +43,7 @@ namespace Features.LocationSku
 
                 Debug.Log("Updated current location: " + newBalance);
 
-                await _playerDataRepository.UpdateSku(SkuId, newBalance.ToString(CultureInfo.InvariantCulture));
+                await _playerDataRepository.UpdateSku(skuId, newBalance.ToString(CultureInfo.InvariantCulture));
                 _skuHandler.UpdateBalance(newBalance);
             }
         }

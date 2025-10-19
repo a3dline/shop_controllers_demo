@@ -7,6 +7,7 @@ namespace Features.GoldSku
 {
     internal class GoldSkuEntryPoint : RootControllerBase, IAsyncStartable
     {
+        private const string SkuId = "gold_sku";
         private readonly ISkuHandler _skuHandler;
         private readonly ISkuRegistrationService _skuRegistrationService;
 
@@ -29,13 +30,13 @@ namespace Features.GoldSku
         {
             var registry = new SkuRegistry
                            {
-                               SkuId = "gold_sku",
+                               SkuId = SkuId,
                                DisplayName = "Gold",
                                Handler = _skuHandler
                            };
             _skuRegistrationService.Register(registry);
 
-            return StartAndWait<GoldSkuHandlerController>(flowToken);
+            return StartAndWait<GoldSkuHandlerController>(SkuId, flowToken);
         }
     }
 }

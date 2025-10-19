@@ -7,6 +7,7 @@ namespace Features.VipSku
 {
     public class VipSkuEntryPoint : RootControllerBase, IAsyncStartable
     {
+        private const string SkuId = "vip_sku";
         private readonly ISkuHandler _skuHandler;
         private readonly ISkuRegistrationService _skuRegistrationService;
 
@@ -29,13 +30,13 @@ namespace Features.VipSku
         {
             var registry = new SkuRegistry
                            {
-                               SkuId = "vip_sku",
+                               SkuId = SkuId,
                                DisplayName = "VIP", 
                                Handler = _skuHandler
                            };
             _skuRegistrationService.Register(registry);
 
-            return StartAndWait<VipSkuHandlerController>(flowToken);
+            return StartAndWait<VipSkuHandlerController>(SkuId, flowToken);
         }
     }
 }

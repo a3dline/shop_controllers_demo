@@ -9,7 +9,6 @@ namespace Features.HealthSku
 {
     internal class HealthSkuHandlerController : ControllerBase
     {
-        private const string SkuId = "health";
         private readonly IPlayerDataRepositoryWrapper _playerDataRepository;
 
         private readonly ISkuHandlerInternal _skuHandler;
@@ -24,12 +23,14 @@ namespace Features.HealthSku
 
         protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
-            var resultString = await _playerDataRepository.GetSkuData(SkuId);
-            if (int.TryParse(resultString, out var result))
+            var skuId = (string)context;
+            var resultString = await _playerDataRepository.GetSkuData(skuId);
+            if (!int.TryParse(resultString, out var balance))
             {
-                _skuHandler.UpdateBalance(result);    
+                balance = 100;
             }
 
+            _skuHandler.UpdateBalance(balance);
 
             await foreach (var _ in UniTaskAsyncEnumerable.EveryUpdate().WithCancellation(flowToken))
             {
@@ -42,7 +43,7 @@ namespace Features.HealthSku
 
                 Debug.Log("Updated health balance: " + newBalance);
 
-                await _playerDataRepository.UpdateSku(SkuId, newBalance.ToString(CultureInfo.InvariantCulture));
+                await _playerDataRepository.UpdateSku(skuId, newBalance.ToString(CultureInfo.InvariantCulture));
                 _skuHandler.UpdateBalance(newBalance);
             }
         }

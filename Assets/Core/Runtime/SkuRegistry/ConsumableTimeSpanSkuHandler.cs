@@ -15,7 +15,11 @@ namespace Core
 
         protected override IConvertible CalculateBalanceFromTransactions()
         {
-            var summ = Convert.ToInt64(CurrentBalance, CultureInfo);
+            var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var current = Convert.ToInt64(CurrentBalance, CultureInfo);
+
+            var summ = current < now ? now : current;
+            
             foreach (var transaction in TransactionsQueue)
             {
                 summ += Convert.ToInt64(transaction, CultureInfo);

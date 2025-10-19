@@ -7,6 +7,7 @@ namespace Features.HealthSku
 {
     public class HealthSkuEntryPoint : RootControllerBase, IAsyncStartable
     {
+        private const string SkuId = "health_sku";
         private readonly ISkuHandler _skuHandler;
         private readonly ISkuRegistrationService _skuRegistrationService;
 
@@ -29,13 +30,13 @@ namespace Features.HealthSku
         {
             var registry = new SkuRegistry
                            {
-                               SkuId = "health_sku",
-                               DisplayName = "Health", // TO to context
+                               SkuId = SkuId,
+                               DisplayName = "Health",
                                Handler = _skuHandler
                            };
             _skuRegistrationService.Register(registry);
 
-            return StartAndWait<HealthSkuHandlerController>(flowToken);
+            return StartAndWait<HealthSkuHandlerController>(SkuId, flowToken);
         }
     }
 }

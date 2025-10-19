@@ -9,8 +9,6 @@ namespace Features.GoldSku
 {
     internal class GoldSkuHandlerController : ControllerBase
     {
-        private const string SkuId = "gold";
-        
         private readonly ISkuHandlerInternal _skuHandler;
         private readonly IPlayerDataRepositoryWrapper _playerDataRepository;
 
@@ -24,11 +22,14 @@ namespace Features.GoldSku
 
         protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
-            var resultString = await _playerDataRepository.GetSkuData(SkuId);
-            if (int.TryParse(resultString, out var result))
+            var skuId = (string)context;
+            var resultString = await _playerDataRepository.GetSkuData(skuId);
+            if (!int.TryParse(resultString, out var balance))
             {
-                _skuHandler.UpdateBalance(result);    
+                balance = 10;
             }
+            
+            _skuHandler.UpdateBalance(balance);    
             
             await foreach (var _ in UniTaskAsyncEnumerable.EveryUpdate().WithCancellation(flowToken))
             {
@@ -41,7 +42,7 @@ namespace Features.GoldSku
 
                 Debug.Log("Updated gold balance: " + newBalance);
 
-                await _playerDataRepository.UpdateSku(SkuId, newBalance.ToString(CultureInfo.InvariantCulture));
+                await _playerDataRepository.UpdateSku(skuId, newBalance.ToString(CultureInfo.InvariantCulture));
                 _skuHandler.UpdateBalance(newBalance);
             }
         }
