@@ -22,7 +22,7 @@ namespace Core
         }
         public IReadOnlyAsyncReactiveProperty<string> BalanceString => _balanceStringProperty;
 
-        string ISkuHandler.Id { get; set; }
+        string ISkuHandler.SkuId { get; set; }
 
         public IConvertible TakeNewBalanceAndClear()
         {

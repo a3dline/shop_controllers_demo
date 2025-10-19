@@ -26,7 +26,7 @@ namespace Features.BalanceBar
             using var _ = instance.ToDisposable();
 
             var view = instance.GetComponent<BalanceBarItemView>();
-            var displayName = _skuRegistrationService.GetSkuDisplayName(skuHandler.Id);
+            var displayName = _skuRegistrationService.GetSkuDisplayName(skuHandler.SkuId);
             view.SetLabel(displayName);
             
             await foreach (var value in skuHandler.BalanceString.WithCancellation(flowToken))

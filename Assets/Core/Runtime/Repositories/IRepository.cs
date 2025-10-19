@@ -1,10 +1,11 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Threading;
+using Cysharp.Threading.Tasks;
 
 namespace Core
 {
     public interface IRepository
     {
-        UniTask UpsetAsync(string key, string value);
-        UniTask<string> GetAsync(string key);    
+        UniTask UpsetAsync(string key, string value, CancellationToken token);
+        UniTask<string> GetAsync(string key, CancellationToken token);    
     }
 }

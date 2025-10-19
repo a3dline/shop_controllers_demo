@@ -35,7 +35,7 @@ namespace Core
 
         public IReadOnlyAsyncReactiveProperty<string> BalanceString => BalanceStringProperty;
 
-        string ISkuHandler.Id { get; set; }
+        string ISkuHandler.SkuId { get; set; }
 
         protected abstract IConvertible CalculateBalanceFromTransactions();
         protected abstract string GetBalanceString(IConvertible amount);

@@ -25,23 +25,35 @@ namespace Features.VipSku
         protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
             var skuId = (string)context;
+            var repositoryProperty = await _playerDataRepository.GetSkuPropertyAsync(skuId, flowToken);
+
+            UpdateBalanceAsyncFlow(repositoryProperty, flowToken).Forget();
+            TransactionsAsyncFlow(skuId, flowToken).Forget();
+
             var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            var cachedValue = await _playerDataRepository.GetSkuData(skuId);
-            if (cachedValue is not null)
+            if (repositoryProperty.Value is not null)
             {
-                var value = cachedValue.ToInt64(CultureInfo.InvariantCulture);
-                _skuHandler.UpdateBalance(value < now ? now : value);
+                var value = repositoryProperty.Value.ToInt64(CultureInfo.InvariantCulture);
+                await _playerDataRepository.UpdateSku(skuId, value < now ? now : value, flowToken);
             }
             else
             {
-                _skuHandler.UpdateBalance(now);
+                await _playerDataRepository.UpdateSku(skuId, now, flowToken);
             }
 
-            TransactionsFlowAsync(skuId, flowToken).Forget();
             await UniTask.WaitUntilCanceled(flowToken);
         }
+        
+        private async UniTaskVoid UpdateBalanceAsyncFlow(IReadOnlyAsyncReactiveProperty<IConvertible> property,
+                                                         CancellationToken flowToken)
+        {
+            await foreach (var value in property.WithCancellation(flowToken))
+            {
+                _skuHandler.UpdateBalance(value);
+            }
+        }
 
-        private async UniTaskVoid TransactionsFlowAsync(string skuId, CancellationToken flowToken)
+        private async UniTaskVoid TransactionsAsyncFlow(string skuId, CancellationToken flowToken)
         {
             await foreach (var _ in UniTaskAsyncEnumerable.EveryUpdate().WithCancellation(flowToken))
             {
@@ -56,7 +68,7 @@ namespace Features.VipSku
                                                  .FromUnixTimeSeconds(newBalance.ToInt64(CultureInfo.InvariantCulture))
                                                  .DateTime);
 
-                await _playerDataRepository.UpdateSku(skuId, newBalance.ToString(CultureInfo.InvariantCulture));
+                await _playerDataRepository.UpdateSku(skuId, newBalance.ToString(CultureInfo.InvariantCulture), flowToken);
                 _skuHandler.UpdateBalance(newBalance);
             }
         }

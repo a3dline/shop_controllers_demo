@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Threading;
 using Core;
 using Cysharp.Threading.Tasks;
@@ -24,10 +25,29 @@ namespace Features.GoldSku
         protected override async UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
             var skuId = (string)context;
-            var balance = await _playerDataRepository.GetSkuData(skuId) ?? 10;
-            
-            _skuHandler.UpdateBalance(balance);
+            var repositoryProperty = await _playerDataRepository.GetSkuPropertyAsync(skuId, flowToken);
+            UpdateBalanceAsyncFlow(repositoryProperty, flowToken).Forget();
+            TransactionsAsyncFlow(skuId, flowToken).Forget();
 
+            if (repositoryProperty.Value is null)
+            {
+                await _playerDataRepository.UpdateSku(skuId, 10, flowToken);
+            }
+
+            await UniTask.WaitUntilCanceled(flowToken);
+        }
+
+        private async UniTaskVoid UpdateBalanceAsyncFlow(IReadOnlyAsyncReactiveProperty<IConvertible> property,
+                                                         CancellationToken flowToken)
+        {
+            await foreach (var value in property.WithCancellation(flowToken))
+            {
+                _skuHandler.UpdateBalance(value);
+            }
+        }
+
+        private async UniTaskVoid TransactionsAsyncFlow(string skuId, CancellationToken flowToken)
+        {
             await foreach (var _ in UniTaskAsyncEnumerable.EveryUpdate().WithCancellation(flowToken))
             {
                 if (!_skuHandler.IsDirty)
@@ -39,8 +59,9 @@ namespace Features.GoldSku
 
                 Debug.Log("Updated gold balance: " + newBalance);
 
-                await _playerDataRepository.UpdateSku(skuId, newBalance.ToString(CultureInfo.InvariantCulture));
-                _skuHandler.UpdateBalance(newBalance);
+                await _playerDataRepository.UpdateSku(skuId,
+                                                      newBalance.ToString(CultureInfo.InvariantCulture),
+                                                      flowToken);
             }
         }
     }

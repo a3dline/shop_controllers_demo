@@ -16,20 +16,20 @@ namespace Core
                 return;
             }
 
-            registry.Handler.Id = registry.SkuId;
+            registry.Handler.SkuId = registry.SkuId;
             _skuDisplayNames.Add(registry.SkuId, registry.DisplayName);
         }
 
         public IEnumerable<ISkuHandler> SkuHandlers => _skuHandlers.Values;
 
-        public ISkuHandler GetSkuHandler(string skuHandlerId)
+        public ISkuHandler GetSkuHandler(string skuId)
         {
-            return _skuHandlers.GetValueOrDefault(skuHandlerId);
+            return _skuHandlers.GetValueOrDefault(skuId);
         }
 
-        public string GetSkuDisplayName(string skuHandlerId)
+        public string GetSkuDisplayName(string skuId)
         {
-            return _skuDisplayNames.TryGetValue(skuHandlerId, out var displayName) ? displayName : string.Empty;
+            return _skuDisplayNames.TryGetValue(skuId, out var displayName) ? displayName : string.Empty;
         }
     }
 }
