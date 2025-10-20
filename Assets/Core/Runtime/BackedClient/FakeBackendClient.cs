@@ -11,7 +11,7 @@ namespace Core.BackedClient
                                                                        TRequest requestData,
                                                                        CancellationToken token)
         {
-            await UniTask.Delay(1000, cancellationToken: token);
+            await UniTask.Delay(3000, cancellationToken: token);
             token.ThrowIfCancellationRequested();
 
             return endpoint switch
