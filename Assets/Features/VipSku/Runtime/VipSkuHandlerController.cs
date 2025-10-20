@@ -70,9 +70,7 @@ namespace Features.VipSku
 
                 var newBalance = _skuHandler.TakeNewBalanceAndClear();
 
-                await _playerDataRepository.UpdateSku(skuId,
-                                                      newBalance.ToString(CultureInfo.InvariantCulture),
-                                                      flowToken);
+                await _playerDataRepository.UpdateSku(skuId, newBalance, flowToken);
                 _skuHandler.UpdateBalance(newBalance);
             }
         }

@@ -31,8 +31,7 @@ namespace Features.GameShop
                             var skuInfo = new SkuInfo
                                           {
                                               SkuId = instance.SkuId,
-                                              DisplayName = instance.DisplayName,
-                                              SkuValueType = instance.SkuValueType
+                                              DisplayName = instance.DisplayName
                                           };
 
                             if (!string.IsNullOrEmpty(skuInfo.SkuId) && skuInfos.All(s => s.SkuId != skuInfo.SkuId))
@@ -52,7 +51,6 @@ namespace Features.GameShop
         {
             public string SkuId;
             public string DisplayName;
-            public Type SkuValueType;
         }
     }
 }

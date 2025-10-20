@@ -15,7 +15,6 @@ namespace Features.HealthSku
         public HealthSkuDefinition() { }
         public string SkuId => "health_sku";
         public string DisplayName => "Health";
-        public Type SkuValueType => typeof(int);
         public ISkuHandler Handler { get; }
     }
 }

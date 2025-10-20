@@ -60,9 +60,7 @@ namespace Features.HealthSku
 
                 var newBalance = _skuHandler.TakeNewBalanceAndClear();
 
-                await _playerDataRepository.UpdateSku(skuId,
-                                                      newBalance.ToString(CultureInfo.InvariantCulture),
-                                                      flowToken);
+                await _playerDataRepository.UpdateSku(skuId, newBalance, flowToken);
             }
         }
     }

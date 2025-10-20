@@ -15,7 +15,6 @@ namespace Features.GoldSku
         public GoldSkuDefinition() { }
         public string SkuId => "gold_sku";
         public string DisplayName => "Gold";
-        public Type SkuValueType => typeof(int);
         public ISkuHandler Handler { get; }
     }
 }

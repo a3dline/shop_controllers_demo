@@ -15,7 +15,6 @@ namespace Features.LocationSku
         public LocationSkuDefinition() { }
         public string SkuId => "location_sku";
         public string DisplayName => "Location";
-        public Type SkuValueType => typeof(string);
         public ISkuHandler Handler { get;  }
     }
 }

@@ -15,7 +15,6 @@ namespace Features.VipSku
         public VipSkuDefinition() { }
         public string SkuId => "vip_sku";
         public string DisplayName => "VIP";
-        public Type SkuValueType => typeof(long);
         public ISkuHandler Handler { get; }
     }
 }

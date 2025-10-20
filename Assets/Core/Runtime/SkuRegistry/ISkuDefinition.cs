@@ -6,7 +6,6 @@ namespace Core
     {
         string SkuId { get; }
         string DisplayName { get; }
-        Type SkuValueType { get; }
         ISkuHandler Handler { get; }
     }
 }
