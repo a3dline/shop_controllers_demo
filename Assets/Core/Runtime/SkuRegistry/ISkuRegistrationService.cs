@@ -4,7 +4,7 @@ namespace Core
 {
     public interface ISkuRegistrationService
     {
-        void Register(in SkuRegistry registry);
+        void Register(ISkuDefinition definition);
         IEnumerable<ISkuHandler> SkuHandlers { get; }
         ISkuHandler GetSkuHandler(string skuId);
         string GetSkuDisplayName(string skuId);

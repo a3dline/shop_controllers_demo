@@ -17,5 +17,11 @@ namespace Features.HealthSku
             var value = base.CalculateBalanceFromTransactions().ToInt32(CultureInfo.InvariantCulture);
             return Math.Min(value, 100);
         }
+
+        public override IConvertible Add(IConvertible a, IConvertible b)
+        {
+            var value = base.Add(a, b).ToInt32(CultureInfo.InstalledUICulture);
+            return Math.Min(value, 100);
+        }
     }
 }

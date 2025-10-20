@@ -16,25 +16,39 @@ MonoBehaviour:
     Bundles:
     - PurchaseData:
       - SkuId: gold_sku
-        Amount: -1
+        Amount: -5
       RewardData:
       - SkuId: health_sku
-        Amount: 1
-      Title: Test Data
-      BundleId: 
+        Amount: 50
+      Title: Restore half of the health for 5 gold
+      BundleId: 1
     - PurchaseData:
       - SkuId: gold_sku
         Amount: -1
+      - SkuId: health_sku
+        Amount: -20
       RewardData:
       - SkuId: vip_sku
         Amount: 60
-      Title: Test Data
-      BundleId: 
+      Title: One minute VIP for 1 gold and 20% health
+      BundleId: 2
     - PurchaseData:
       - SkuId: vip_sku
         Amount: -15
+      - SkuId: health_sku
+        Amount: -10
+      RewardData:
+      - SkuId: location_sku
+        Amount: VIP
+      Title: 'Go to "VIP" location for VIP users and 10% health. '
+      BundleId: 3
+    - PurchaseData:
+      - SkuId: location_sku
+        Amount: VIP
       RewardData:
       - SkuId: gold_sku
-        Amount: 1
-      Title: Buy gold from VIP
-      BundleId: 3
+        Amount: 5
+      - SkuId: location_sku
+        Amount: default
+      Title: Leave VIP location and restore 5 gold
+      BundleId: 4

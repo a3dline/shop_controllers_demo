@@ -41,7 +41,7 @@ namespace Features.BalanceBar
 
         private void AddValueToRepository(ISkuHandler skuHandler, CancellationToken token)
         {
-            var newBalance = skuHandler.Add(skuHandler.DefaultBalance, skuHandler.Balance);
+            var newBalance = skuHandler.Add(skuHandler.Balance, skuHandler.DefaultBalance);
             _playerData.UpdateSku(skuHandler.SkuId, newBalance, token);
         }
     }

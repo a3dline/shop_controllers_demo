@@ -7,17 +7,19 @@ namespace Features.HealthSku
 {
     public class HealthSkuEntryPoint : RootControllerBase, IAsyncStartable
     {
-        private const string SkuId = "health_sku";
+        private readonly HealthSkuDefinition _definition;
         private readonly ISkuHandlerInternal _skuHandler;
         private readonly ISkuRegistrationService _skuRegistrationService;
 
         public HealthSkuEntryPoint(IControllerFactory controllerFactory,
                                    ISkuRegistrationService skuRegistrationService,
-                                   ISkuHandlerInternal skuHandler)
+                                   ISkuHandlerInternal skuHandler,
+                                   HealthSkuDefinition definition)
             : base(controllerFactory)
         {
             _skuRegistrationService = skuRegistrationService;
             _skuHandler = skuHandler;
+            _definition = definition;
         }
 
         public UniTask StartAsync(CancellationToken cancellation = default)
@@ -28,16 +30,10 @@ namespace Features.HealthSku
 
         protected override UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
-            var registry = new SkuRegistry
-                           {
-                               SkuId = SkuId,
-                               DisplayName = "Health",
-                               Handler = _skuHandler
-                           };
             _skuHandler.DefaultBalance = 100;
-            _skuRegistrationService.Register(registry);
+            _skuRegistrationService.Register(_definition);
 
-            return StartAndWait<HealthSkuHandlerController>(SkuId, flowToken);
+            return StartAndWait<HealthSkuHandlerController>(_definition.SkuId, flowToken);
         }
     }
 }

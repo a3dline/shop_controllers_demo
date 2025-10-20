@@ -8,16 +8,16 @@ namespace Core
         private readonly Dictionary<string, string> _skuDisplayNames = new();
         private readonly Dictionary<string, ISkuHandler> _skuHandlers = new();
 
-        public void Register(in SkuRegistry registry)
+        public void Register(ISkuDefinition definition)
         {
-            if (!_skuHandlers.TryAdd(registry.SkuId, registry.Handler))
+            if (!_skuHandlers.TryAdd(definition.SkuId, definition.Handler))
             {
-                Debug.LogError("SKU already registered: " + registry.SkuId);
+                Debug.LogError("SKU already registered: " + definition.SkuId);
                 return;
             }
 
-            registry.Handler.SkuId = registry.SkuId;
-            _skuDisplayNames.Add(registry.SkuId, registry.DisplayName);
+            definition.Handler.SkuId = definition.SkuId;
+            _skuDisplayNames.Add(definition.SkuId, definition.DisplayName);
         }
 
         public IEnumerable<ISkuHandler> SkuHandlers => _skuHandlers.Values;

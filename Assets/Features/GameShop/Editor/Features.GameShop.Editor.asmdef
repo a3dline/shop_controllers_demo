@@ -1,0 +1,10 @@
+﻿{
+  "name": "Features.GameShop.Editor",
+  "includePlatforms": [
+    "Editor"
+  ],
+  "references": [
+    "Core.Runtime",
+    "Features.GameShop"
+  ]
+}

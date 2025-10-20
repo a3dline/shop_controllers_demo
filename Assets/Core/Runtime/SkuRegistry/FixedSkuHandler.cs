@@ -18,7 +18,7 @@ namespace Core
         }
         public bool IsValidTransaction(IConvertible amount)
         {
-            return true;
+            return amount.ToString(CultureInfo.InvariantCulture) == _value.ToString(CultureInfo.InvariantCulture);
         }
         public IReadOnlyAsyncReactiveProperty<string> BalanceString => _balanceStringProperty;
 

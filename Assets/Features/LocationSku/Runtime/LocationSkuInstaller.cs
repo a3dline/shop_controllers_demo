@@ -9,6 +9,7 @@ namespace Features.LocationSku
         protected override void Configure(IContainerBuilder builder)
         {
             builder.Register<ISkuHandlerInternal, ISkuHandler, FixedSkuHandler>(Lifetime.Singleton);
+            builder.Register<LocationSkuDefinition>(Lifetime.Singleton); 
             builder.RegisterEntryPoint<LocationSkuEntryPoint>();
             builder.Register<LocationSkuHandlerController>(Lifetime.Transient);
         }

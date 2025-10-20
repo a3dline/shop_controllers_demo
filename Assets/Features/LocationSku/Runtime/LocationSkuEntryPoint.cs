@@ -7,17 +7,19 @@ namespace Features.LocationSku
 {
     internal class LocationSkuEntryPoint : RootControllerBase, IAsyncStartable
     {
-        private const string SkuId = "location_sku";
+        private readonly LocationSkuDefinition _definition;
         private readonly ISkuHandlerInternal _skuHandler;
         private readonly ISkuRegistrationService _skuRegistrationService;
 
         public LocationSkuEntryPoint(IControllerFactory controllerFactory,
                                      ISkuRegistrationService skuRegistrationService,
-                                     ISkuHandlerInternal skuHandler)
+                                     ISkuHandlerInternal skuHandler,
+                                     LocationSkuDefinition definition)
             : base(controllerFactory)
         {
             _skuRegistrationService = skuRegistrationService;
             _skuHandler = skuHandler;
+            _definition = definition;
         }
 
         public UniTask StartAsync(CancellationToken cancellation = default)
@@ -28,16 +30,10 @@ namespace Features.LocationSku
 
         protected override UniTask AsyncFlow(object context, CancellationToken flowToken)
         {
-            var registry = new SkuRegistry
-                           {
-                               SkuId = SkuId,
-                               DisplayName = "Location",
-                               Handler = _skuHandler
-                           };
             _skuHandler.DefaultBalance = "default";
-            _skuRegistrationService.Register(registry);
+            _skuRegistrationService.Register(_definition);
 
-            return StartAndWait<LocationSkuHandlerController>(SkuId, flowToken);
+            return StartAndWait<LocationSkuHandlerController>(_definition.SkuId, flowToken);
         }
     }
 }
