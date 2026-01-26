@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using AControllersTree;
 using Core;
 using Core.EventsBus;
 using Cysharp.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace Features.GameShop
     {
         private readonly IGameShopService _shopService;
         private readonly IEventBus _eventBus;
+        private readonly CompositeDisposable _disposables = new();
 
         public GameShopCardController(IControllerFactory controllerFactory,
                                       IGameShopService shopService,
@@ -28,7 +30,7 @@ namespace Features.GameShop
             var bundle = cardContext.Bundle;
 
             var instance = Object.Instantiate(prefab, parent);
-            RegisterDisposable(instance.ToDisposable());
+            _disposables.Add(instance.ToDisposable());
 
             var view = instance.GetComponent<ShopCardView>();
 
@@ -40,7 +42,12 @@ namespace Features.GameShop
             PurchaseButtonEnabledFlow(view, bundle, flowToken).Forget();
             return UniTask.WaitUntilCanceled(flowToken);
         }
-        
+
+        protected override void OnStop()
+        {
+            _disposables.Dispose();
+        }
+
         private async UniTaskVoid PurchaseButtonEnabledFlow(ShopCardView view, BundleData bundle, CancellationToken flowToken)
         {
             using var canPurchaseItemProperty = _shopService.CanPurchaseItemProperty(bundle);

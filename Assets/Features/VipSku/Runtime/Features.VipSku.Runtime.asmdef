@@ -5,6 +5,7 @@
     "UniTask.Linq",
     "VContainer",
     "Core.Runtime",
-    "GameEvents.Runtime"
+    "GameEvents.Runtime",
+    "AControllersTree.Runtime"
   ]
 }

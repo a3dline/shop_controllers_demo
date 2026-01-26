@@ -5,6 +5,7 @@
     "UniTask.Linq",
     "VContainer",
     "Unity.Addressables",
-    "Unity.ResourceManager"
+    "Unity.ResourceManager",
+    "AControllersTree.Runtime"
   ]
 }

@@ -5,6 +5,7 @@
     "VContainer",
     "Unity.TextMeshPro",
     "AUnitaskSemaphore.Runtime",
+    "AControllersTree.Runtime",
     "Core.Runtime",
     "GameEvents.Runtime"
   ]

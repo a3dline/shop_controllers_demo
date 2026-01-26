@@ -9,6 +9,7 @@
     "Features.GoldSku.Runtime",
     "Features.Health.Runtime",
     "Features.VipSku.Runtime",
-    "Features.LocationSku.Runtime"
+    "Features.LocationSku.Runtime",
+    "AControllersTree.Runtime"
   ]
 }

@@ -18,6 +18,7 @@ namespace Features.GameShop
         private GameShopData _data;
         private UniTaskCompletionSource<GameShopData> _dataGetterTask;
         private bool _isDataInitialized;
+        private Dictionary<string, AsyncReactiveProperty<bool>> _purchasingBundlesProperty = new();
 
         public GameShopService(IBackendClient backendClient,
                                ISkuRegistrationService skuRegistrationService)
@@ -48,6 +49,13 @@ namespace Features.GameShop
 
         public async UniTask<bool> PurchaseItemAsync(BundleData bundle, CancellationToken token)
         {
+            if (!_purchasingBundlesProperty.TryGetValue(bundle.BundleId, out var property))
+            {
+                property = new AsyncReactiveProperty<bool>(false);
+                _purchasingBundlesProperty[bundle.BundleId] = property;
+            }
+            property.Value = true;
+            
             var requestDto = new BundleRequestDto
                              {
                                  BundleId = bundle.BundleId
@@ -75,6 +83,7 @@ namespace Features.GameShop
                 handler.AddTransaction(sku.Amount);
             }
 
+            property.Value = false;
             return true;
         }
 
@@ -84,7 +93,9 @@ namespace Features.GameShop
                                  .Select(sku => new ValueTuple<ISkuHandler, IConvertible>(_skuRegistrationService.GetSkuHandler(sku.SkuId), sku.Amount))
                                  .ToList();
             
-            return new CanPurchaseItemProperty(handlers);
+            var purchasingProperty = _purchasingBundlesProperty.GetValueOrDefault(bundle.BundleId);
+            
+            return new CanPurchaseItemProperty(handlers, purchasingProperty);
         }
     }
 
